@@ -83,9 +83,10 @@ int main(int argc, const char * argv[])
                 probeKey = "TM0P";
             else if ([probe isEqualToString:@"LCD"])
                 probeKey = "TL0P";
-            else if ([probe isEqualToString:@"help"])
-                printf("Here's what you can request with -t : \n- CPU \n- CPUH : CPU Heatsink\n- CPUD : CPU Die\n- GPU\n- GPUH : GPU Heatsink\n- GPUD : GPU Die\n- PALM : Left palm rest\n- POWER : Battery charger proximity\n- BAT3 : Battery, position 3\n- BAT2 : Battery, position 2\n- BAT1 : Battery, position 1\n- PCHD : Platform Controller Hub\n- PCH : Power Supply Proximity\n- MEM1 : RAM\n- MEM2 : RAM proximity\n- LCD : Screen\n If something returns 0.00, doesn't matter : it just means that there is no such component in your computer !");
-            else {
+            else if ([probe isEqualToString:@"help"]) {
+                printf("Here's what you can request with -t : \n- CPU \n- CPUH : CPU Heatsink\n- CPUD : CPU Die\n- GPU\n- GPUH : GPU Heatsink\n- GPUD : GPU Die\n- PALM : Left palm rest\n- POWER : Battery charger proximity\n- BAT3 : Battery, position 3\n- BAT2 : Battery, position 2\n- BAT1 : Battery, position 1\n- PCHD : Platform Controller Hub\n- PCH : Power Supply Proximity\n- MEM1 : RAM\n- MEM2 : RAM proximity\n- LCD : Screen\nIf something returns 0, don't worry, as it just means that there is no such part within your computer !\n");
+                    exit(EXIT_SUCCESS);
+            } else {
                 printf("Unknown component\n");
                 exit(EXIT_FAILURE);
             }
