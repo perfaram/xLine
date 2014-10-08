@@ -25,7 +25,7 @@
 #define __SMC_H__
 #endif
 
-#define SMCLIBVERSION               "0.01"
+#define SMCLIBVERSION               "1" //According to @alexleigh : version bump
 
 #define KERNEL_INDEX_SMC      2
 

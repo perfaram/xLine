@@ -104,9 +104,10 @@ int main(int argc, const char * argv[])
             kern_return_t result;
             SMCVal_t val;
                 result = SMCReadKey(smcKey, &val);
-                if (result != kIOReturnSuccess)
+                if (result != kIOReturnSuccess) {
                     printf("Error: SMCReadKey() = %08x\n", result);
-                else
+                    exit(EXIT_FAILURE);
+                } else
                     printVal(val);
             SMCClose();
             exit(EXIT_SUCCESS);
@@ -146,10 +147,11 @@ int main(int argc, const char * argv[])
                 IFPrint(@"%@\n", [batteryKit batDesignCapacity]);
             else if ([batterySelector isEqualToString:@"temperature"])
                 IFPrint(@"%@\n", [batteryKit batTemperature]);
-            else if ([batterySelector isEqualToString:@"help"])
+            else if ([batterySelector isEqualToString:@"help"]) {
                 printf("Here's what you can request with -b : \n- Voltage : Prints battery's current voltage \n- CycleCount : Battery's current count of charge/discharge cycle\n- DesignCycleCount : Battery's designed (planned) cycle count \n- SerialNumber : Self-explanatory, hmmm? \n- Power : Battery's current power in Wh \n- Temperature : Battery's temperature in °Celsius \n- Amperage : Battery's current amperage in mA \n- MaxCapacity : Battery's maximum capacity in mA \n- DesignCapacity : Battery's designed (planned) capacity in mA \n- Manufacturer : Self-explanatory... \n- ManufactureDate : U silly, bro? \n- TimeRemaining : The number of minutes before you run out of juice \n- isAC : Is your computer currently connected to an external power source ? \n- isFull : Is your battery currently full ? \n- isCharging : Is your battery currently being recharged ? \n- IsPresent : Is there a battery connected to this computer (if not, all other requests will return empty values, except isAC)\n");
-            else {
-                //IFPrint(@"Unknown component");
+                exit(EXIT_FAILURE);
+            } else {
+                IFPrint(@"Unknown component\n");
                 exit(EXIT_FAILURE);
             }
             exit(EXIT_SUCCESS);
