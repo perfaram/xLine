@@ -25,6 +25,7 @@ int main(int argc, const char * argv[])
     @autoreleasepool {
         NSString *probe = @"";
         NSString *batterySelector= @"";
+        NSString *smc= @"";
         
         BRLOptionParser *options = [BRLOptionParser new];
         //TODO : add options to get raw SMC data, translated data, formatted data, beautiful text
@@ -32,6 +33,7 @@ int main(int argc, const char * argv[])
         [options addOption:"temp" flag:'t' description:@"Prints the specified component's temperature. Use [-t help] to know which info you can request." argument:&probe];
         [options addSeparator];
         [options addOption:"battery" flag:'b' description:@"Prints the specified battery info. Use [-b help] to know which info you can request." argument:&batterySelector];
+        [options addOption:"smc" flag:'s' description:@"Useful to make raw SMC requests. For example : xline -s TC0P will return raw SMC data, in hex." argument:&smc];
         [options addSeparator];
         __weak typeof(options) weakOptions = options;
         [options addOption:"help" flag:'h' description:@"Show this message" block:^{
@@ -93,6 +95,20 @@ int main(int argc, const char * argv[])
             double temp = SMCGetTemperature(probeKey);
             //IFPrint(@"%f", temp);
             printf("%f\n", temp);//[probe UTF8String]);
+            exit(EXIT_SUCCESS);
+        }
+        
+        if (![smc isEqualToString:@""]) {
+            char *smcKey = (char*)[smc UTF8String];
+            SMCOpen();
+            kern_return_t result;
+            SMCVal_t val;
+                result = SMCReadKey(smcKey, &val);
+                if (result != kIOReturnSuccess)
+                    printf("Error: SMCReadKey() = %08x\n", result);
+                else
+                    printVal(val);
+            SMCClose();
             exit(EXIT_SUCCESS);
         }
         

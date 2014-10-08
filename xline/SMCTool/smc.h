@@ -65,6 +65,7 @@
 #define DATATYPE_SI16         "si16"
 
 #define DATATYPE_PWM          "{pwm"
+#define DATATYPE_CHARSTAR     "ch8*"
 
 // key values
 #define SMC_KEY_CPU_TEMP      "TC0P"
@@ -119,8 +120,12 @@ typedef struct {
 } SMCVal_t;
 
 // prototypes
+kern_return_t SMCOpen(void);
+kern_return_t SMCClose(void);
 float SMCGetFanSpeed(int fanNum);
 int SMCGetFanNumber(char *key);
+kern_return_t SMCReadKey(UInt32Char_t key, SMCVal_t *val);
+void printVal(SMCVal_t val);
 double SMCGetTemperature(char *key);
 const char* getBatteryHealth();
 int getDesignCycleCount();

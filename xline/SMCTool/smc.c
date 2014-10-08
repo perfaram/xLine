@@ -72,6 +72,29 @@ void _ultostr(char *str, UInt32 val)
             (unsigned int) val);
 }
 
+void printFPE2(SMCVal_t val) {
+    /* FIXME: This decode is incomplete, last 2 bits are dropped */
+    printf("%.0f ", _strtof(val.bytes, val.dataSize, 2));
+}
+
+void printUInt(SMCVal_t val) {
+    printf("%u ", (unsigned int) _strtoul(val.bytes, val.dataSize, 10));
+}
+
+void printString(SMCVal_t val) {
+    printf("%s ", val.bytes);
+}
+
+void printBytesHex(SMCVal_t val) {
+    int i;
+    
+    printf("(bytes");
+    for (i = 0; i < val.dataSize; i++) {
+        printf(" %02x", (unsigned char) val.bytes[i]);
+    }
+    printf(")\n");
+}
+
 kern_return_t SMCOpen(void)
 {
     kern_return_t result;
@@ -211,6 +234,34 @@ int SMCGetFanNumber(char *key)
     result = SMCReadKey(key, &val);
     return _strtoul((char *)val.bytes, val.dataSize, 10);
 }
+
+void printVal(SMCVal_t val) {
+    printf("  %s  [%-4s]  ", val.key, val.dataType);
+    
+    if (val.dataSize > 0) {
+        if ((strcmp(val.dataType, DATATYPE_UINT8) == 0) ||
+            (strcmp(val.dataType, DATATYPE_UINT16) == 0) ||
+            (strcmp(val.dataType, DATATYPE_UINT32) == 0)
+            ) {
+            printUInt(val);
+        }
+        
+        else if (strcmp(val.dataType, DATATYPE_FPE2) == 0) {
+            printFPE2(val);
+        }
+        
+        else if (strcmp(val.dataType, DATATYPE_CHARSTAR) == 0) {
+            printString(val);
+        }
+        
+        printBytesHex(val);
+    }
+    
+    else {
+        printf("no data\n");
+    }
+}
+
 /**********************************************************************************************************/
 /* Battery info
  * Ref: http://www.newosxbook.com/src.jl?tree=listings&file=bat.c
