@@ -26,15 +26,21 @@ int main(int argc, const char * argv[])
         NSString *probe = @"";
         NSString *batterySelector= @"";
         NSString *smc= @"";
+        BOOL raw = NO;
+        BOOL convert = NO;
+        BOOL type = NO;
         
         BRLOptionParser *options = [BRLOptionParser new];
-        //TODO : add options to get raw SMC data, translated data, formatted data, beautiful text
+        //TODO : add options to get raw SMC data, translated data, formatted data
         [options setBanner:@"usage: %s [-t <probe>] [-b <key>]", argv[0]];
+        [options addSeparator:@"Options"];
         [options addOption:"temp" flag:'t' description:@"Prints the specified component's temperature. Use [-t help] to know which info you can request." argument:&probe];
-        [options addSeparator];
         [options addOption:"battery" flag:'b' description:@"Prints the specified battery info. Use [-b help] to know which info you can request." argument:&batterySelector];
-        [options addOption:"smc" flag:'s' description:@"Useful to make raw SMC requests. For example : xline -s TC0P will return raw SMC data, in hex." argument:&smc];
-        [options addSeparator];
+        [options addOption:"smc" flag:'s' description:@"Useful to make raw SMC requests. For example : xline -s XXXX (XXXX = requested SMC key) will return raw SMC data (in hex) and its type. See SWITCHES section to get all this formatted." argument:&smc];
+        [options addSeparator:@"Switches"];
+        [options addOption:"raw" flag:'R' description:@"Combine with -s. Shows raw data (hex)" value:&raw];
+        [options addOption:"type" flag:'T' description:@"Combine with -s. Shows only the requested key's type (eg SP78)" value:&type];
+        [options addOption:"convert" flag:'C' description:@"Combine with -s. Shows converted data (bytes 41e0 [SP78] => ~65.625 [°C]) without any text" value:&convert];
         __weak typeof(options) weakOptions = options;
         [options addOption:"help" flag:'h' description:@"Show this message" block:^{
             printf("%s", [[weakOptions description] UTF8String]);
@@ -46,6 +52,11 @@ int main(int argc, const char * argv[])
         if (![options parseArgc:argc argv:argv error:&error]) {
             const char * message = [[error localizedDescription] UTF8String];
             fprintf(stderr, "%s: %s\n", argv[0], message);
+            exit(EXIT_FAILURE);
+        }
+        
+        if (raw && convert) {
+            printf("Printed data cannot be raw AND converted ! Use --help to get rescued.");
             exit(EXIT_FAILURE);
         }
         
@@ -107,8 +118,21 @@ int main(int argc, const char * argv[])
                 if (result != kIOReturnSuccess) {
                     printf("Error: SMCReadKey() = %08x\n", result);
                     exit(EXIT_FAILURE);
-                } else
-                    printVal(val);
+                } else {
+                    if (raw) {
+                        printRawVal(val);
+                        printf("\n");
+                    }
+                    else if (convert) {
+                        printConvVal(val);
+                    }
+                    else if (type) {
+                        printValType(val);
+                    }
+                    else {
+                        printVal(val,smcKey);
+                    };
+                };
             SMCClose();
             exit(EXIT_SUCCESS);
         }

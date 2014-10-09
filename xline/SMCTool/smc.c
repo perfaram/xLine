@@ -92,7 +92,7 @@ void printBytesHex(SMCVal_t val) {
     for (i = 0; i < val.dataSize; i++) {
         printf(" %02x", (unsigned char) val.bytes[i]);
     }
-    printf(")\n");
+    printf(")");
 }
 
 kern_return_t SMCOpen(void)
@@ -235,9 +235,64 @@ int SMCGetFanNumber(char *key)
     return _strtoul((char *)val.bytes, val.dataSize, 10);
 }
 
-void printVal(SMCVal_t val) {
-    printf("  %s  [%-4s]  ", val.key, val.dataType);
+void printVal(SMCVal_t val, char *key) {
+    printf(" key [type]  (raw) {formatted}\n");
+    printf(" %s  [%-4s]  ", key, val.dataType);
     
+    if (val.dataSize > 0) {
+        printBytesHex(val);
+        printf("  ");
+        
+        if ((strcmp(val.dataType, DATATYPE_UINT8) == 0) ||
+            (strcmp(val.dataType, DATATYPE_UINT16) == 0) ||
+            (strcmp(val.dataType, DATATYPE_UINT32) == 0)
+            ) {
+            printf("{");
+            printUInt(val);
+            printf("}");
+        }
+        else if (strcmp(val.dataType, DATATYPE_FPE2) == 0) {
+            printf("{");
+            printFPE2(val);
+            printf("}");
+        }
+        else if (strcmp(val.dataType, DATATYPE_CHARSTAR) == 0) {
+            printf("{");
+            printString(val);
+            printf("}");
+        }
+        else if (strcmp(val.dataType, DATATYPE_SP78) == 0) {
+            // convert SP78 value to temperature
+            int intValue = (val.bytes[0] * 256 + val.bytes[1]) >> 2;
+            printf("{");
+            printf("%f", intValue / 64.0);
+            printf("}");
+        }
+        printf("\n");
+    }
+    
+    else {
+        printf("E11 - SMC returned no data\n");
+    }
+}
+
+void printRawVal(SMCVal_t val) {
+    if (val.dataSize > 0) {
+        printBytesHex(val);
+    } else {
+        printf("E11 - SMC returned no data\n");
+    }
+}
+
+void printValType(SMCVal_t val) {
+    if (val.dataSize > 0) {
+        printf("%-4s\n", val.dataType);
+    } else {
+        printf("E11 - SMC returned no data\n");
+    }
+}
+
+void printConvVal(SMCVal_t val) {
     if (val.dataSize > 0) {
         if ((strcmp(val.dataType, DATATYPE_UINT8) == 0) ||
             (strcmp(val.dataType, DATATYPE_UINT16) == 0) ||
@@ -245,20 +300,19 @@ void printVal(SMCVal_t val) {
             ) {
             printUInt(val);
         }
-        
         else if (strcmp(val.dataType, DATATYPE_FPE2) == 0) {
             printFPE2(val);
         }
-        
         else if (strcmp(val.dataType, DATATYPE_CHARSTAR) == 0) {
             printString(val);
         }
-        
-        printBytesHex(val);
-    }
-    
-    else {
-        printf("no data\n");
+        else if (strcmp(val.dataType, DATATYPE_SP78) == 0) {
+            // convert SP78 value to temperature
+            int intValue = (val.bytes[0] * 256 + val.bytes[1]) >> 2;
+            printf("%f\n", intValue / 64.0);
+        }
+    } else {
+        printf("E11 - SMC returned no data\n");
     }
 }
 
