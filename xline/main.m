@@ -55,8 +55,8 @@ int main(int argc, const char * argv[])
             exit(EXIT_FAILURE);
         }
         
-        if (raw && convert) {
-            printf("Printed data cannot be raw AND converted ! Use --help to get rescued.");
+        if ((raw && (convert || type) || (convert && type))) { //for sure there's a more efficient way of doing this
+            printf("Printed data cannot be raw AND converted ! Use --help to get rescued.\n");
             exit(EXIT_FAILURE);
         }
         
