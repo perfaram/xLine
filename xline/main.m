@@ -26,21 +26,28 @@ int main(int argc, const char * argv[])
         NSString *probe = @"";
         NSString *batterySelector= @"";
         NSString *smc= @"";
+        //NSString *smcW= @"";
+        NSString *fan= @"0";
+        NSString *sil= @"";
         BOOL raw = NO;
         BOOL convert = NO;
         BOOL type = NO;
+        BOOL fandata = NO;
         
         BRLOptionParser *options = [BRLOptionParser new];
-        //TODO : add options to get raw SMC data, translated data, formatted data
         [options setBanner:@"usage: %s [-t <probe>] [-b <key>]", argv[0]];
         [options addSeparator:@"Options"];
         [options addOption:"temp" flag:'t' description:@"Prints the specified component's temperature. Use [-t help] to know which info you can request." argument:&probe];
         [options addOption:"battery" flag:'b' description:@"Prints the specified battery info. Use [-b help] to know which info you can request." argument:&batterySelector];
-        [options addOption:"smc" flag:'s' description:@"Useful to make raw SMC requests. For example : xline -s XXXX (XXXX = requested SMC key) will return raw SMC data (in hex) and its type. See SWITCHES section to get all this formatted." argument:&smc];
+        [options addOption:"smcRead" flag:'r' description:@"Useful to make raw SMC requests. For example : xline -s X (X = SMC key) will return raw SMC data (in hex) and its type. See SWITCHES section to get all this formatted." argument:&smc];
+        //[options addOption:"smcWrite" flag:'w' description:@"Used to write data to SMC. Be careful, it could disturb it (you'll have to reinitialise it) - or even worse... For example : xline -S X Y (X = SMC key, Y = Value) " argument:&smcW];
+        [options addOption:"SIL" flag:'S' description:@"Setting SIL led (the led that sits on your MacBook's front) state. [-S 1] is on, [-S 0] is off, [-S breathe] makes it breathe like when the MacBook is sleeping." argument:&sil];
+        [options addOption:"fan" flag:'f' description:@"Prints the specified fan's data. Use [-f help] to get examples." argument:&fan];
         [options addSeparator:@"Switches"];
         [options addOption:"raw" flag:'R' description:@"Combine with -s. Shows raw data (hex)" value:&raw];
         [options addOption:"type" flag:'T' description:@"Combine with -s. Shows only the requested key's type (eg SP78)" value:&type];
         [options addOption:"convert" flag:'C' description:@"Combine with -s. Shows converted data (bytes 41e0 [SP78] => ~65.625 [°C]) without any text" value:&convert];
+        [options addOption:"fandata" flag:'D' description:@"Combine with -f. Shows fan parameters in a comma-separated list style. Use [-f help] to get examples." value:&fandata];
         __weak typeof(options) weakOptions = options;
         [options addOption:"help" flag:'h' description:@"Show this message" block:^{
             printf("%s", [[weakOptions description] UTF8String]);
@@ -109,6 +116,36 @@ int main(int argc, const char * argv[])
             exit(EXIT_SUCCESS);
         }
         
+        if (![fan isEqualToString:@""]) {
+            kern_return_t result;
+            int fanNum;
+            
+            NSNumberFormatter *fanNm = [[NSNumberFormatter alloc] init];
+            [fanNm setNumberStyle:NSNumberFormatterDecimalStyle];
+            NSNumber *fanIDn = [fanNm numberFromString:fan];
+            
+            if (fanIDn != nil) {
+                fanNum=[fanIDn intValue];
+            } else if (fanIDn == nil) {
+                fanNum=-1;
+            } else {
+                printf("Example : \n[xline -f] to get all fans infos\n[xline -f 0] to get fan O infos\n[xline -f 0 -D] to get a comma-separated list of fan 0 infos (e.g=A,B,C,D,E,F with A=Current fan RPM, B=minimum RPM, C=maximum RPM, D=Safe speed, E=Target speed, F=Fan mode. If you do not provide a fan ID but ask for a comma-sep. list, you'll get #X,A,B,C,D,E,F with #X=fan ID)");
+                exit(EXIT_SUCCESS);
+            }
+            
+            if (fandata) {
+                result = SMCPrintFansAsCSL(fanNum);
+            } else {
+                result = SMCPrintFans(fanNum);
+            }
+            if (result != kIOReturnSuccess) {
+                printf("Error: SMCPrintFans() = %08x\n", result);
+                exit(EXIT_FAILURE);
+            } else {
+                exit(EXIT_SUCCESS);
+            }
+        }
+        
         if (![smc isEqualToString:@""]) {
             char *smcKey = (char*)[smc UTF8String];
             SMCOpen();
@@ -130,9 +167,84 @@ int main(int argc, const char * argv[])
                         printValType(val);
                     }
                     else {
-                        printVal(val,smcKey);
+                        printVal(val);
                     };
                 };
+            SMCClose();
+            exit(EXIT_SUCCESS);
+        }
+        
+        if (![sil isEqualToString:@""]) {
+            SMCOpen();
+            char *state;
+            char *silKey;
+            if ([sil isEqual:@"1"]) {
+                state = "01";
+                silKey = "LSOO";
+            } else if ([sil isEqual:@"0"]){
+                state = "";
+                silKey = "LSOO";
+            } else if ([sil isEqual:@"breathe"]){
+                state = "020101";
+                silKey = "LSSB";
+                printf("Good choice. Seeing your SIL breathing is always a relaxing experience.\n");
+            /*} else if ([sil isEqual:@"blink"]){
+                printf("Tic-toc-tic-toc-tic-toc-BOOOM. I hope this won't happen to your Macintosh.\n");
+                SMCBlink();
+                SMCClose();
+                exit(EXIT_SUCCESS);*/
+            } else {
+                printf("GRATS ! You broke it. Get rescued calling xline -h");
+                SMCClose();
+                exit(EXIT_FAILURE);
+            }
+            SMCVal_t      val;
+            kern_return_t result;
+            UInt32Char_t  key = "\0";
+            snprintf(key, 5, "%s", silKey);
+            {
+                int i, j, k1, k2;
+                char c;
+				char* p = state; j=0; i=0;
+				while (i < strlen(state))
+                {
+					c = *p++; k1=k2=0; i++;
+					/*if (c=' ') {
+                     c = *p++; i++;
+                     }*/
+					if ((c >= '0') && (c<='9')) {
+						k1=c-'0';
+					} else if ((c >='a') && (c<='f')) {
+						k1=c-'a'+10;
+					}
+					c = *p++; i++;
+					/*if (c=' ') {
+                     c = *p++; i++;
+                     }*/
+					if ((c >= '0') && (c<='9')) {
+						k2=c-'0';
+					} else if ((c >= 'a') && (c<='f')) {
+						k2=c-'a'+10;
+					}
+					
+                    //snprintf(c, 2, "%c%c", optarg[i * 2], optarg[(i * 2) + 1]);
+                    val.bytes[j++] = (int)(((k1&0xf)<<4) + (k2&0xf));
+                }
+                val.dataSize = j;
+                /*if ((val.dataSize * 2) != strlen(optarg)) {
+                 printf("Error: value is not valid\n");
+                 return 1;
+                 }*/
+            }
+            //val.dataType = SMCGetValType("LSOO");
+            if (strlen(key) > 0) {
+                snprintf(val.key, 5, "%s", key);
+                result = SMCWriteKey(val);
+                if (result != kIOReturnSuccess)
+                    printf("Error: SMCWriteKey() = %08x\n", result);
+            }
+            //printVal(val);
+            //SMCBlink();
             SMCClose();
             exit(EXIT_SUCCESS);
         }

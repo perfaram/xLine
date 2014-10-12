@@ -3,7 +3,9 @@
  * Copyright (C) 2006 devnull
  * Portions Copyright (C) 2012 Alex Leigh
  * Portions Copyright (C) 2013 Michael Wilber
+ * Portions Copyright (C) 2013 Jedda Wignall
  * Portions Copyright (C) 2014 Perceval Faramaz
+ * Portions Copyright (C) 2014 Naoya Sato
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,7 +27,7 @@
 #define __SMC_H__
 #endif
 
-#define SMCLIBVERSION               "1" //According to @alexleigh : version bump
+#define SMCLIBVERSION               "1.7" //Added sooo much thing that 1.7 seems good :D. And I like 7. (V2 will be at the time SMCUtil becomes a class.)
 
 #define KERNEL_INDEX_SMC      2
 
@@ -64,7 +66,9 @@
 #define DATATYPE_SI8          "si8 "
 #define DATATYPE_SI16         "si16"
 
+#define DATATYPE_FLAG         "flag"
 #define DATATYPE_PWM          "{pwm"
+#define DATATYPE_LSO          "{lso"
 #define DATATYPE_CHARSTAR     "ch8*"
 
 // key values
@@ -112,6 +116,12 @@ typedef struct {
 
 typedef char              UInt32Char_t[5];
 
+typedef char              Flag[1];
+typedef UInt8   flag;
+
+
+typedef UInt16 PWMValue;
+
 typedef struct {
     UInt32Char_t            key;
     UInt32                  dataSize;
@@ -119,13 +129,47 @@ typedef struct {
     SMCBytes_t              bytes;
 } SMCVal_t;
 
+enum LmsSelect { kLmsOff,              // SIL off
+    kLmsOn,               // SIL on,        autoscale OK
+    kLmsBreathe,          // SIL breathing, autoscale OK
+    kLmsBrightNoScale     // SIL on bright, no autoscale
+    //   (for power switch override)
+};
+
+struct LmsDwell {
+    UInt16 ui16MidToStartRatio; // Mid-step size / start-step  size
+    UInt16 ui16MidToEndRatio;   // Mid-step size / end-step    size
+    UInt16 ui16StartTicks;      // # of ticks using start-step size
+    UInt16 ui16EndTicks;        // # of ticks using end-step   size
+};
+
+struct LmsFlare {
+    PWMValue modvFlareCeiling;  // Flare algorithm is active below this value.
+    PWMValue modvMinChange;     // Minimum rate of change while flaring.
+    UInt16   ui16FlareAdjust;   // Smaller value causes stronger flare as
+};
+
+struct LmsOverrideBehavior {
+    enum LmsSelect lmssTargetBehavior;  // Enumerated SIL behavior
+    flag fRamp;                    // Set to 1 (LMS_RAMP) for a slew-rate
+    //   controlled transition.  Set to 0
+    //   (LMS_NO_RAMP) for a step change.
+};
+
 // prototypes
 kern_return_t SMCOpen(void);
 kern_return_t SMCClose(void);
+kern_return_t SMCPrintFans(int fanNum);
+kern_return_t SMCPrintFansAsCSL(int fanNum);
+char SMCGetValType(char *valKey);
+SMCVal_t createSMCVal(char *valKey, char *valDataType, SMCBytes_t valBytes);
+kern_return_t SMCWriteKey(SMCVal_t writeVal);
 float SMCGetFanSpeed(int fanNum);
+int SMCGetFanRPM(char *key);
 int SMCGetFanNumber(char *key);
 kern_return_t SMCReadKey(UInt32Char_t key, SMCVal_t *val);
-void printVal(SMCVal_t val, char *key);
+void printVal(SMCVal_t val);
+//void SMCBlink();
 void printRawVal(SMCVal_t val);
 void printValType(SMCVal_t val);
 void printConvVal(SMCVal_t val);
