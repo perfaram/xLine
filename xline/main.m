@@ -27,7 +27,7 @@ int main(int argc, const char * argv[])
         NSString *batterySelector= @"";
         NSString *smc= @"";
         //NSString *smcW= @"";
-        NSString *fan= @"0";
+        NSString *fan= @"";
         NSString *sil= @"";
         BOOL raw = NO;
         BOOL convert = NO;
@@ -69,41 +69,41 @@ int main(int argc, const char * argv[])
         
         if (![probe isEqualToString:@""]) {
             char *probeKey;
-            if ([probe isEqualToString:@"CPU"])
+            if ([probe caseInsensitiveCompare:@"CPU"]== NSOrderedSame )
                 probeKey = "TC0P";
-            else if ([probe isEqualToString:@"CPUD"])
+            else if ([probe caseInsensitiveCompare:@"CPUD"]== NSOrderedSame )
                 probeKey = "TC0D";
-            else if ([probe isEqualToString:@"CPUH"])
+            else if ([probe caseInsensitiveCompare:@"CPUH"]== NSOrderedSame )
                 probeKey = "TC0H";
-            else if ([probe isEqualToString:@"GPU"])
+            else if ([probe caseInsensitiveCompare:@"GPU"]== NSOrderedSame )
                 probeKey = "TG0P";
-            else if ([probe isEqualToString:@"GPUD"])
+            else if ([probe caseInsensitiveCompare:@"GPUD"]== NSOrderedSame )
                 probeKey = "TG0D";
-            else if ([probe isEqualToString:@"GPUH"])
+            else if ([probe caseInsensitiveCompare:@"GPUH"]== NSOrderedSame )
                 probeKey = "TG0H";
-            else if ([probe isEqualToString:@"PALM"])
+            else if ([probe caseInsensitiveCompare:@"PALM"]== NSOrderedSame )
                 probeKey = "Ts0P";
-            else if ([probe isEqualToString:@"POWER"])//battery charger prox (FUCK HERE, Tm0P/Tp0P/Tp0C)
+            else if ([probe caseInsensitiveCompare:@"POWER"]== NSOrderedSame )//battery charger prox (FUCK HERE, Tm0P/Tp0P/Tp0C)
                 probeKey = "Ts0S";
-            else if ([probe isEqualToString:@"BAT3"]) // battery pos 3
+            else if ([probe caseInsensitiveCompare:@"BAT3"]== NSOrderedSame ) // battery pos 3
                 probeKey = "TB2T";
-            else if ([probe isEqualToString:@"BAT2"]) // battery pos 2
+            else if ([probe caseInsensitiveCompare:@"BAT2"]== NSOrderedSame ) // battery pos 2
                 probeKey = "TB1T";
-            else if ([probe isEqualToString:@"BAT1"]) // battery pos 1
+            else if ([probe caseInsensitiveCompare:@"BAT1"]== NSOrderedSame ) // battery pos 1
                 probeKey = "TB0T";
-            else if ([probe isEqualToString:@"WHATSTHAT"]) //BPIT, TC0F, BRIT, TPCD
+            else if ([probe caseInsensitiveCompare:@"WHATSTHAT"]== NSOrderedSame ) //BPIT, TC0F, BRIT, TPCD
                 probeKey = "WHAT";
-            else if ([probe isEqualToString:@"PCHD"])
+            else if ([probe caseInsensitiveCompare:@"PCHD"]== NSOrderedSame )
                 probeKey = "TPCD";
-            else if ([probe isEqualToString:@"PCH"])
+            else if ([probe caseInsensitiveCompare:@"PCH"]== NSOrderedSame )
                 probeKey = "TP0P";
-            else if ([probe isEqualToString:@"MEM1"])
+            else if ([probe caseInsensitiveCompare:@"MEM1"]== NSOrderedSame )
                 probeKey = "TM0S";
-            else if ([probe isEqualToString:@"MEM2"]) // ACTUALLY MEM PROX
+            else if ([probe caseInsensitiveCompare:@"MEM2"]== NSOrderedSame ) // ACTUALLY MEM PROX
                 probeKey = "TM0P";
-            else if ([probe isEqualToString:@"LCD"])
+            else if ([probe caseInsensitiveCompare:@"LCD"]== NSOrderedSame )
                 probeKey = "TL0P";
-            else if ([probe isEqualToString:@"help"]) {
+            else if ([probe caseInsensitiveCompare:@"help"]== NSOrderedSame ) {
                 printf("Here's what you can request with -t : \n- CPU \n- CPUH : CPU Heatsink\n- CPUD : CPU Die\n- GPU\n- GPUH : GPU Heatsink\n- GPUD : GPU Die\n- PALM : Left palm rest\n- POWER : Battery charger proximity\n- BAT3 : Battery, position 3\n- BAT2 : Battery, position 2\n- BAT1 : Battery, position 1\n- PCHD : Platform Controller Hub\n- PCH : Power Supply Proximity\n- MEM1 : RAM\n- MEM2 : RAM proximity\n- LCD : Screen\nIf something returns 0, don't worry, as it just means that there is no such part within your computer !\n");
                     exit(EXIT_SUCCESS);
             } else {
@@ -251,39 +251,39 @@ int main(int argc, const char * argv[])
         
         if (![batterySelector isEqualToString:@""]) {
             id batteryKit = [batKit alloc];
-            if ([batterySelector isEqualToString:@"voltage"])
+            if ([batterySelector caseInsensitiveCompare:@"voltage"]== NSOrderedSame )
                 IFPrint(@"%@\n", [batteryKit batVoltage]);
-            else if ([batterySelector isEqualToString:@"cyclecount"])
+            else if ([batterySelector caseInsensitiveCompare:@"cyclecount"]== NSOrderedSame )
                 IFPrint(@"%@\n", [batteryKit batCycleCount]);
-            else if ([batterySelector isEqualToString:@"designcyclecount"])
+            else if ([batterySelector caseInsensitiveCompare:@"designcyclecount"]== NSOrderedSame )
                 IFPrint(@"%@\n", [batteryKit batDesignCycleCount]);
-            else if ([batterySelector isEqualToString:@"serialnumber"])
+            else if ([batterySelector caseInsensitiveCompare:@"serialnumber"]== NSOrderedSame )
                 IFPrint(@"%@\n", [batteryKit batHSNumber]);
-            else if ([batterySelector isEqualToString:@"ispresent"])
+            else if ([batterySelector caseInsensitiveCompare:@"ispresent"]== NSOrderedSame )
                 IFPrint(@"%@\n", [batteryKit batIsPresent]);
-            else if ([batterySelector isEqualToString:@"isfull"])
+            else if ([batterySelector caseInsensitiveCompare:@"isfull"]== NSOrderedSame )
                 IFPrint(@"%@\n", [batteryKit batIsFull]);
-            else if ([batterySelector isEqualToString:@"ischarging"])
+            else if ([batterySelector caseInsensitiveCompare:@"ischarging"]== NSOrderedSame )
                 IFPrint(@"%@\n", [batteryKit batIsCharging]);
-            else if ([batterySelector isEqualToString:@"manufacturer"])
+            else if ([batterySelector caseInsensitiveCompare:@"manufacturer"]== NSOrderedSame )
                 IFPrint(@"%@\n", [batteryKit batManufacturer]);
-            else if ([batterySelector isEqualToString:@"manufacturedate"])
+            else if ([batterySelector caseInsensitiveCompare:@"manufacturedate"]== NSOrderedSame )
                 IFPrint(@"%@\n", [batteryKit batManufactureDate]);
-            else if ([batterySelector isEqualToString:@"timeremaining"])
+            else if ([batterySelector caseInsensitiveCompare:@"timeremaining"]== NSOrderedSame )
                 IFPrint(@"%@\n", [batteryKit batTimeRemaining]);
-            else if ([batterySelector isEqualToString:@"isAC"])
+            else if ([batterySelector caseInsensitiveCompare:@"isAC"]== NSOrderedSame )
                 IFPrint(@"%@\n", [batteryKit batIsACConnected]);
-            else if ([batterySelector isEqualToString:@"power"])
+            else if ([batterySelector caseInsensitiveCompare:@"power"]== NSOrderedSame )
                 IFPrint(@"%@\n", [batteryKit batWatts]);
-            else if ([batterySelector isEqualToString:@"amperage"])
+            else if ([batterySelector caseInsensitiveCompare:@"amperage"]== NSOrderedSame )
                 IFPrint(@"%@\n", [batteryKit batCurrentAmperage]);
-            else if ([batterySelector isEqualToString:@"maxcapacity"])
+            else if ([batterySelector caseInsensitiveCompare:@"maxcapacity"]== NSOrderedSame )
                 IFPrint(@"%@\n", [batteryKit batMaxCapacity]);
-            else if ([batterySelector isEqualToString:@"designcapacity"])
+            else if ([batterySelector caseInsensitiveCompare:@"designcapacity"]== NSOrderedSame )
                 IFPrint(@"%@\n", [batteryKit batDesignCapacity]);
-            else if ([batterySelector isEqualToString:@"temperature"])
+            else if ([batterySelector caseInsensitiveCompare:@"temperature"]== NSOrderedSame )
                 IFPrint(@"%@\n", [batteryKit batTemperature]);
-            else if ([batterySelector isEqualToString:@"help"]) {
+            else if ([batterySelector caseInsensitiveCompare:@"help"]== NSOrderedSame ) {
                 printf("Here's what you can request with -b : \n- Voltage : Prints battery's current voltage \n- CycleCount : Battery's current count of charge/discharge cycle\n- DesignCycleCount : Battery's designed (planned) cycle count \n- SerialNumber : Self-explanatory, hmmm? \n- Power : Battery's current power in Wh \n- Temperature : Battery's temperature in °Celsius \n- Amperage : Battery's current amperage in mA \n- MaxCapacity : Battery's maximum capacity in mA \n- DesignCapacity : Battery's designed (planned) capacity in mA \n- Manufacturer : Self-explanatory... \n- ManufactureDate : U silly, bro? \n- TimeRemaining : The number of minutes before you run out of juice \n- isAC : Is your computer currently connected to an external power source ? \n- isFull : Is your battery currently full ? \n- isCharging : Is your battery currently being recharged ? \n- IsPresent : Is there a battery connected to this computer (if not, all other requests will return empty values, except isAC)\n");
                 exit(EXIT_FAILURE);
             } else {

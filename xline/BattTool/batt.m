@@ -255,7 +255,7 @@
     NSDictionary *moreAdvancedBatteryInfo = [self getMoreAdvancedBatteryInfo];
     //NSDictionary *moreAdvancedBatteryInfo = [self getMoreAdvancedBatteryInfo];
     //NSNumber *Voltage =
-    _batCycleCount = [moreAdvancedBatteryInfo objectForKey:@"Cycle Count"];
+    _batCycleCount = [moreAdvancedBatteryInfo objectForKey:@"CycleCount"];
     return _batCycleCount;
 }
 
