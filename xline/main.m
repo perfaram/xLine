@@ -9,7 +9,8 @@
 #import <Foundation/Foundation.h>
 #import "BRLOptionParser/BRLOptionParser.h"
 #import "SMCTool/smc.h"
-#import "BattTool/batt.h"
+//#import "BattTool/batt.h"
+#import "batkit/batkit/batkit.h"
 
 void IFPrint (NSString *format, ...) {
     va_list args;
