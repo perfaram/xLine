@@ -11,7 +11,7 @@ The available options, except -s :
  - `-t` to get temp sensors data
 
 ##Copyrights :
-#### SMC
+#### SMCUtil
  * Original version Copyright (C) 2006 devnull
  * Portions Copyright (C) 2012 Alex Leigh (@alexleigh)
  * Portions Copyright (C) 2013 Michael Wilber
@@ -19,8 +19,8 @@ The available options, except -s :
  * Portions Copyright (C) 2014 Perceval Faramaz (@perfaram)
  * Portions Copyright (C) 2014 Naoya Sato (@stny)
 
-#### Commandline parameters parsing 
-Done with [BRLOptionParser](https://github.com/barrelage/BRLOptionParser) by @barrelage (Copyright (C) 2013 Stephen Celis <stephen@stephencelis.com>)
+#### BRLOptionParser 
+ * Copyright (C) 2013 Stephen Celis (@barrelage)
 
 #### BatKit
  * Copyright (C) 2014 Perceval Faramaz (@perfaram)
