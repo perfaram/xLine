@@ -503,7 +503,7 @@ char SMCGetValType(char *valKey)
     return nil;
 }
 
-double SMCGetTemperature(char *key)
+kern_return_t SMCGetTemperature(char *key, double *comTemp)
 {
     SMCOpen();
     SMCVal_t val;
@@ -516,14 +516,15 @@ double SMCGetTemperature(char *key)
             if (strcmp(val.dataType, DATATYPE_SP78) == 0) {
                 // convert fp78 value to temperature
                 int intValue = (val.bytes[0] * 256 + val.bytes[1]) >> 2;
-                return intValue / 64.0;
+                *comTemp = intValue / 64.0;
+                return kIOReturnSuccess;
                 SMCClose();
             }
         }
     }
     // read failed
     SMCClose();
-    return 0.0;
+    return result;
 }
 
 float SMCGetFanSpeed(int fanNum)

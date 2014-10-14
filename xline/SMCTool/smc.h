@@ -173,7 +173,7 @@ void printVal(SMCVal_t val);
 void printRawVal(SMCVal_t val);
 void printValType(SMCVal_t val);
 void printConvVal(SMCVal_t val);
-double SMCGetTemperature(char *key);
+kern_return_t SMCGetTemperature(char *key, double *comTemp);
 const char* getBatteryHealth();
 int getDesignCycleCount();
 int getBatteryCharge();
