@@ -238,7 +238,7 @@ int main(int argc, const char * argv[])
 				state = "01";
 				silKey = "LSOO";
 			} else if ([sil isEqual:@"0"]){
-				state = "";
+				state = "00";
 				silKey = "LSOO";
 			} else if ([sil isEqual:@"breathe"]){
 				state = "020101";
@@ -250,7 +250,7 @@ int main(int argc, const char * argv[])
 				 SMCClose();
 				 exit(EXIT_SUCCESS);*/
 			} else {
-				printf("GRATS ! You broke it. Get rescued calling xline -h");
+				printf("GRATS ! You broke it. Get rescued calling xline -h\n");
 				SMCClose();
 				exit(EXIT_FAILURE);
 			}
