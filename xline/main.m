@@ -3,7 +3,7 @@
 //  xLine
 //
 //  Created by Perceval FARAMAZ on 03.10.14.
-//  Copyright (c) 2014 perfaram. All rights reserved.
+//  Copyright (c) 2014 Perceval <perfaram> Faramaz. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -87,7 +87,7 @@ int main(int argc, const char * argv[])
         [options addOption:"platform" flag:'p' description:@"Getting computer info, such as device (eg MacBookPro8,1). To get more info, [-p help]." argument:&platform];
         [options addOption:"SIL" flag:'S' description:@"Setting SIL (the led that sits on your MacBook's front) state. [-S 1] is on, [-S 0] is off, [-S breathe] makes it breathe like when the MacBook is sleeping." argument:&sil];
         [options addOption:"fan" flag:'f' description:@"Prints the specified fan's data. Use [-f help] to get examples." argument:&fan];
-        [options addOption:"dump" flag:'d' description:@"Dumps everything to a ZIP archive, containing different files. See [-d help] to know more." argument:&dump];
+        //[options addOption:"dump" flag:'d' description:@"Dumps everything to a ZIP archive, containing different files. See [-d help] to know more." argument:&dump];
         [options addSeparator:@"Switches"];
         [options addOption:"raw" flag:'R' description:@"Combine with -s. Shows raw data (hex)" value:&raw];
         [options addOption:"type" flag:'T' description:@"Combine with -s. Shows only the requested key's type (eg SP78)" value:&type];
