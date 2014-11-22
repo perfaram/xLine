@@ -229,7 +229,82 @@ int main(int argc, const char * argv[])
                 exit(EXIT_SUCCESS);
             }
         }
-        
+		
+		if (![sil isEqualToString:@""]) {
+			SMCOpen();
+			char *state;
+			char *silKey;
+			if ([sil isEqual:@"1"]) {
+				state = "01";
+				silKey = "LSOO";
+			} else if ([sil isEqual:@"0"]){
+				state = "";
+				silKey = "LSOO";
+			} else if ([sil isEqual:@"breathe"]){
+				state = "020101";
+				silKey = "LSSB";
+				printf("Good choice. Seeing your SIL breathing is always a relaxing experience.\n");
+				/*} else if ([sil isEqual:@"blink"]){
+				 printf("Tic-toc-tic-toc-tic-toc-BOOOM. I hope this won't happen to your Macintosh.\n");
+				 SMCBlink();
+				 SMCClose();
+				 exit(EXIT_SUCCESS);*/
+			} else {
+				printf("GRATS ! You broke it. Get rescued calling xline -h");
+				SMCClose();
+				exit(EXIT_FAILURE);
+			}
+			SMCVal_t      val;
+			kern_return_t result;
+			UInt32Char_t  key = "\0";
+			snprintf(key, 5, "%s", silKey);
+			{
+				int i, j, k1, k2;
+				char c;
+				char* p = state; j=0; i=0;
+				while (i < strlen(state))
+				{
+					c = *p++; k1=k2=0; i++;
+					/*if (c=' ') {
+					 c = *p++; i++;
+					 }*/
+					if ((c >= '0') && (c<='9')) {
+						k1=c-'0';
+					} else if ((c >='a') && (c<='f')) {
+						k1=c-'a'+10;
+					}
+					c = *p++; i++;
+					/*if (c=' ') {
+					 c = *p++; i++;
+					 }*/
+					if ((c >= '0') && (c<='9')) {
+						k2=c-'0';
+					} else if ((c >= 'a') && (c<='f')) {
+						k2=c-'a'+10;
+					}
+					
+					//snprintf(c, 2, "%c%c", optarg[i * 2], optarg[(i * 2) + 1]);
+					val.bytes[j++] = (int)(((k1&0xf)<<4) + (k2&0xf));
+				}
+				val.dataSize = j;
+				/*if ((val.dataSize * 2) != strlen(optarg)) {
+				 printf("Error: value is not valid\n");
+				 return 1;
+				 }*/
+			}
+			//val.dataType = SMCGetValType("LSOO");
+			if (strlen(key) > 0) {
+				snprintf(val.key, 5, "%s", key);
+				result = SMCWriteKey(val);
+				if (result != kIOReturnSuccess)
+					printf("E10 SMC transaction failed with error %08x\n", result);
+			}
+			//printVal(val);
+			//SMCBlink();
+			SMCClose();
+			exit(EXIT_SUCCESS);
+		}
+		
         if (![smc isEqualToString:@""]) {
             char *smcKey = (char*)[smc UTF8String];
             SMCOpen();
