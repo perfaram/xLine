@@ -7,10 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "BRLOptionParser/BRLOptionParser.h"
-#import "SMCTool/smc.h"
-//#import "BattTool/batt.h"
-#import "batkit/batkit/batkit.h"
+
+// main.m
+#import "BRLOptionParser.h"
+#import "smc.h"
+//#import "batkit/batkit/batkit.h"
 #import <sys/sysctl.h>
 
 void IFPrint (NSString *format, ...) {
@@ -62,6 +63,7 @@ NSString* getSMCVer() {
 int main(int argc, const char * argv[])
 {
     @autoreleasepool {
+        NSString *name = @"world";
         NSString *probe = @"";
         NSString *batterySelector= @"";
         NSString *smc= @"";
@@ -74,10 +76,10 @@ int main(int argc, const char * argv[])
         BOOL convert = NO;
         BOOL type = NO;
         BOOL fandata = NO;
+        BOOL verbose = NO;
         
         BRLOptionParser *options = [BRLOptionParser new];
-        //[options setBanner:@"usage: %s [-t <probe>] [-b <key>]", argv[0]];
-        [options addSeparator:@"Options"];
+        [options addSeparator:@"==Options=="];
         [options addOption:"temp" flag:'t' description:@"Prints the specified component's temperature. Use [-t help] to know which info you can request." argument:&probe];
         [options addOption:"battery" flag:'b' description:@"Prints the specified battery info. Use [-b help] to know which info you can request." argument:&batterySelector];
         [options addOption:"smcRead" flag:'r' description:@"Useful to make raw SMC requests. For example : xline -s X (X = SMC key) will return raw SMC data (in hex) and its type. See SWITCHES section to get all this formatted." argument:&smc];
@@ -91,22 +93,17 @@ int main(int argc, const char * argv[])
         [options addOption:"type" flag:'T' description:@"Combine with -s. Shows only the requested key's type (eg SP78)" value:&type];
         [options addOption:"convert" flag:'C' description:@"Combine with -s. Shows converted data (bytes 41e0 [SP78] => ~65.625 [°C]) without any text" value:&convert];
         [options addOption:"fandata" flag:'D' description:@"Combine with -f. Shows fan parameters in a comma-separated list style. Use [-f help] to get examples." value:&fandata];
+        [options addOption:"verbose" flag:'v' description:nil value:&verbose];
         __weak typeof(options) weakOptions = options;
         [options addOption:"help" flag:'h' description:@"Show this message" block:^{
             printf("%s", [[weakOptions description] UTF8String]);
             exit(EXIT_SUCCESS);
         }];
         
-        
         NSError *error = nil;
         if (![options parseArgc:argc argv:argv error:&error]) {
             const char * message = [[error localizedDescription] UTF8String];
             fprintf(stderr, "%s: %s\n", argv[0], message);
-            exit(EXIT_FAILURE);
-        }
-        
-        if ((raw && (convert || type) || (convert && type))) { //for sure there's a more efficient way of doing this
-            printf("E03 Printed data cannot be raw AND converted ! Use --help to get rescued.\n");
             exit(EXIT_FAILURE);
         }
         
@@ -150,7 +147,7 @@ int main(int argc, const char * argv[])
                 probeKey = "TW0P";
             else if ([probe caseInsensitiveCompare:@"help"]== NSOrderedSame ) {
                 printf("Here's what you can request with -t : \n- CPU \n- CPUH : CPU Heatsink\n- CPUD : CPU Die\n- GPU\n- GPUH : GPU Heatsink\n- GPUD : GPU Die\n- PALM : Left palm rest\n- POWER : Battery charger proximity\n- BAT3 : Battery, position 3\n- BAT2 : Battery, position 2\n- BAT1 : Battery, position 1\n- PCHD : Platform Controller Hub\n- PCH : Power Supply Proximity\n- MEM1 : RAM\n- MEM2 : RAM proximity\n- LCD : Screen\n- AIR : Airport\nIf something returns 0, don't worry, as it just means that there is no such part within your computer !\n");
-                    exit(EXIT_SUCCESS);
+                exit(EXIT_FAILURE);
             } else {
                 printf("E02 Unknown component\n");
                 exit(EXIT_FAILURE);
@@ -159,9 +156,9 @@ int main(int argc, const char * argv[])
             kern_return_t result;
             result= SMCGetTemperature(probeKey, &temp);
             //IFPrint(@"%f", temp);
-            printf("%f\n", temp);//[probe UTF8String]);
+            printf("%f °C\n", temp);//[probe UTF8String]);
             exit(EXIT_SUCCESS);
-        }
+        };
         
         if (![platform isEqualToString:@""]) {
             //char *plKey;
@@ -189,7 +186,7 @@ int main(int argc, const char * argv[])
                 exit(EXIT_SUCCESS);
             } else if ([probe caseInsensitiveCompare:@"help"]== NSOrderedSame ) {
                 printf("You can request : \n- device : Device ID (eg MacBookPro8,1)\n- platform : Platform string (eg k90i)\n- SMCver : SMC version.");
-                exit(EXIT_SUCCESS);
+                exit(EXIT_FAILURE);
             } else {
                 printf("E02 Unknown key\n");
                 exit(EXIT_FAILURE);
@@ -198,12 +195,14 @@ int main(int argc, const char * argv[])
         
         if (![fan isEqualToString:@""]) {
             if ([fan caseInsensitiveCompare:@"help"]== NSOrderedSame) {
-                printf("Example : \n[xline -f] to get all fans infos\n[xline -f 0] to get fan O infos\n[xline -f 0 -D] to get a comma-separated list of fan 0 infos (e.g=A,B,C,D,E,F with A=Current fan RPM, B=minimum RPM, C=maximum RPM, D=Safe speed, E=Target speed, F=Fan mode. If you do not provide a fan ID but ask for a comma-sep. list, you'll get #X,A,B,C,D,E,F with #X=fan ID)\n");
-                exit(EXIT_SUCCESS);
+                printf("Example : \n[xline -f all] to get all fans infos\n[xline -f 0] to get fan O infos\n[xline -f 0 -D] to get a comma-separated list of fan 0 infos (e.g=A,B,C,D,E,F with A=Current fan RPM, B=minimum RPM, C=maximum RPM, D=Safe speed, E=Target speed, F=Fan mode. If you do not provide a fan ID but ask for a comma-sep. list, you'll get #X,A,B,C,D,E,F with #X=fan ID)\n");
+                exit(EXIT_FAILURE);
+            } else if ([fan caseInsensitiveCompare:@"all"]== NSOrderedSame) {
+                
             }
             
             kern_return_t result;
-            int fanNum;
+            int fanNum = 0;
             
             NSNumberFormatter *fanNm = [[NSNumberFormatter alloc] init];
             [fanNm setNumberStyle:NSNumberFormatterDecimalStyle];
@@ -215,6 +214,7 @@ int main(int argc, const char * argv[])
                 fanNum=-1;
             } else {
                 printf("E01 Incorrect parameter");
+                exit(EXIT_FAILURE);
             }
             
             if (fandata) {
@@ -235,170 +235,32 @@ int main(int argc, const char * argv[])
             SMCOpen();
             kern_return_t result;
             SMCVal_t val;
-                result = SMCReadKey(smcKey, &val);
-                if (result != kIOReturnSuccess) {
-                    printf("E10 SMC transaction failed with error %08x\n", result);
-                    exit(EXIT_FAILURE);
-                } else {
-                    if (raw) {
-                        printRawVal(val);
-                        printf("\n");
-                    }
-                    else if (convert) {
-                        printConvVal(val);
-                    }
-                    else if (type) {
-                        printValType(val);
-                    }
-                    else {
-                        printVal(val);
-                    };
-                };
-            SMCClose();
-            exit(EXIT_SUCCESS);
-        }
-        
-        if (![sil isEqualToString:@""]) {
-            SMCOpen();
-            char *state;
-            char *silKey;
-            if ([sil isEqual:@"1"]) {
-                state = "01";
-                silKey = "LSOO";
-            } else if ([sil isEqual:@"0"]){
-                state = "";
-                silKey = "LSOO";
-            } else if ([sil isEqual:@"breathe"]){
-                state = "020101";
-                silKey = "LSSB";
-                printf("Good choice. Seeing your SIL breathing is always a relaxing experience.\n");
-            /*} else if ([sil isEqual:@"blink"]){
-                printf("Tic-toc-tic-toc-tic-toc-BOOOM. I hope this won't happen to your Macintosh.\n");
-                SMCBlink();
-                SMCClose();
-                exit(EXIT_SUCCESS);*/
-            } else {
-                printf("GRATS ! You broke it. Get rescued calling xline -h");
-                SMCClose();
+            result = SMCReadKey(smcKey, &val);
+            if (result != kIOReturnSuccess) {
+                printf("E10 SMC transaction failed with error %08x\n", result);
                 exit(EXIT_FAILURE);
-            }
-            SMCVal_t      val;
-            kern_return_t result;
-            UInt32Char_t  key = "\0";
-            snprintf(key, 5, "%s", silKey);
-            {
-                int i, j, k1, k2;
-                char c;
-				char* p = state; j=0; i=0;
-				while (i < strlen(state))
-                {
-					c = *p++; k1=k2=0; i++;
-					/*if (c=' ') {
-                     c = *p++; i++;
-                     }*/
-					if ((c >= '0') && (c<='9')) {
-						k1=c-'0';
-					} else if ((c >='a') && (c<='f')) {
-						k1=c-'a'+10;
-					}
-					c = *p++; i++;
-					/*if (c=' ') {
-                     c = *p++; i++;
-                     }*/
-					if ((c >= '0') && (c<='9')) {
-						k2=c-'0';
-					} else if ((c >= 'a') && (c<='f')) {
-						k2=c-'a'+10;
-					}
-					
-                    //snprintf(c, 2, "%c%c", optarg[i * 2], optarg[(i * 2) + 1]);
-                    val.bytes[j++] = (int)(((k1&0xf)<<4) + (k2&0xf));
+            } else {
+                if (raw) {
+                    printRawVal(val);
+                    printf("\n");
                 }
-                val.dataSize = j;
-                /*if ((val.dataSize * 2) != strlen(optarg)) {
-                 printf("Error: value is not valid\n");
-                 return 1;
-                 }*/
-            }
-            //val.dataType = SMCGetValType("LSOO");
-            if (strlen(key) > 0) {
-                snprintf(val.key, 5, "%s", key);
-                result = SMCWriteKey(val);
-                if (result != kIOReturnSuccess)
-                    printf("E10 SMC transaction failed with error %08x\n", result);
-            }
-            //printVal(val);
-            //SMCBlink();
+                else if (convert) {
+                    printConvVal(val);
+                }
+                else if (type) {
+                    printValType(val);
+                }
+                else {
+                    printVal(val);
+                };
+            };
             SMCClose();
             exit(EXIT_SUCCESS);
         }
         
-        if (![dump isEqualToString:@""]) {
-            if ([dump caseInsensitiveCompare:@"help"]== NSOrderedSame ) {
-                printf("Here's what will be in your dump : \n- Dumps IOReg to Apple's proprietary format\n- Kexts list to kxlist (just a plist, really)\n- SMC keys to smcdump (plist again!)\n- Hardware data to SPX (plist...)\nNote that dumping can take some time.");
-                exit(EXIT_SUCCESS);
-            } else if ([dump caseInsensitiveCompare:@"quick"]== NSOrderedSame ){
-            IFPrint(@"Now dumping\n");
-            exit(EXIT_SUCCESS);
-            } else {
-            IFPrint(@"Now dumping\n");
-            //DoProgress("Dumping", 37, 100);
-            exit(EXIT_FAILURE);
-            }
-        }
+        
+        printf("%s", [[weakOptions description] UTF8String]);
+    }
     
-        if (![batterySelector isEqualToString:@""]) {
-            id batteryKit = [batKit alloc];
-            if ([batterySelector caseInsensitiveCompare:@"voltage"]== NSOrderedSame )
-                IFPrint(@"%@\n", [batteryKit batVoltage]);
-            else if ([batterySelector caseInsensitiveCompare:@"cyclecount"]== NSOrderedSame )
-                IFPrint(@"%@\n", [batteryKit batCycleCount]);
-            else if ([batterySelector caseInsensitiveCompare:@"designcyclecount"]== NSOrderedSame )
-                IFPrint(@"%@\n", [batteryKit batDesignCycleCount]);
-            else if ([batterySelector caseInsensitiveCompare:@"serialnumber"]== NSOrderedSame )
-                IFPrint(@"%@\n", [batteryKit batHSNumber]);
-            else if ([batterySelector caseInsensitiveCompare:@"ispresent"]== NSOrderedSame )
-                IFPrint(@"%@\n", [batteryKit batIsPresent]);
-            else if ([batterySelector caseInsensitiveCompare:@"isfull"]== NSOrderedSame )
-                IFPrint(@"%@\n", [batteryKit batIsFull]);
-            else if ([batterySelector caseInsensitiveCompare:@"ischarging"]== NSOrderedSame )
-                IFPrint(@"%@\n", [batteryKit batIsCharging]);
-            else if ([batterySelector caseInsensitiveCompare:@"manufacturer"]== NSOrderedSame )
-                IFPrint(@"%@\n", [batteryKit batManufacturer]);
-            else if ([batterySelector caseInsensitiveCompare:@"manufacturedate"]== NSOrderedSame )
-                IFPrint(@"%@\n", [batteryKit batManufactureDate]);
-            else if ([batterySelector caseInsensitiveCompare:@"timeremaining"]== NSOrderedSame )
-                IFPrint(@"%@\n", [batteryKit batTimeRemaining]);
-            else if ([batterySelector caseInsensitiveCompare:@"isAC"]== NSOrderedSame )
-                IFPrint(@"%@\n", [batteryKit batIsACConnected]);
-            else if ([batterySelector caseInsensitiveCompare:@"power"]== NSOrderedSame )
-                IFPrint(@"%@\n", [batteryKit batWatts]);
-            else if ([batterySelector caseInsensitiveCompare:@"amperage"]== NSOrderedSame )
-                IFPrint(@"%@\n", [batteryKit batCurrentAmperage]);
-            else if ([batterySelector caseInsensitiveCompare:@"maxcapacity"]== NSOrderedSame )
-                IFPrint(@"%@\n", [batteryKit batMaxCapacity]);
-            else if ([batterySelector caseInsensitiveCompare:@"designcapacity"]== NSOrderedSame )
-                IFPrint(@"%@\n", [batteryKit batDesignCapacity]);
-            else if ([batterySelector caseInsensitiveCompare:@"temperature"]== NSOrderedSame )
-                IFPrint(@"%@\n", [batteryKit batTemperature]);
-            else if ([batterySelector caseInsensitiveCompare:@"help"]== NSOrderedSame ) {
-                printf("Here's what you can request with -b : \n- Voltage : Prints battery's current voltage \n- CycleCount : Battery's current count of charge/discharge cycle\n- DesignCycleCount : Battery's designed (planned) cycle count \n- SerialNumber : Self-explanatory, hmmm? \n- Power : Battery's current power in Wh \n- Temperature : Battery's temperature in °Celsius \n- Amperage : Battery's current amperage in mA \n- MaxCapacity : Battery's maximum capacity in mA \n- DesignCapacity : Battery's designed (planned) capacity in mA \n- Manufacturer : Self-explanatory... \n- ManufactureDate : U silly, bro? \n- TimeRemaining : The number of minutes before you run out of juice \n- isAC : Is your computer currently connected to an external power source ? \n- isFull : Is your battery currently full ? \n- isCharging : Is your battery currently being recharged ? \n- IsPresent : Is there a battery connected to this computer (if not, all other requests will return empty values, except isAC)\n");
-                exit(EXIT_SUCCESS);
-            } else {
-                IFPrint(@"E02 Unknown component\n");
-                exit(EXIT_FAILURE);
-            }
-            exit(EXIT_SUCCESS);
-        }
+    return EXIT_SUCCESS;
 }
-}
-
-/*
- //SMCOpen();
- double temp = SMCGetTemperature(SMC_KEY_CPU_TEMP);
- //SMCClose();
- IFPrint(@"Hello, World!");
- IFPrint(@"%f", temp);
- 
- printf("%d", getDesignCycleCount());
- */

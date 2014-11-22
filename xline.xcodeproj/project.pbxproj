@@ -7,39 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0B8EE91B19E2E20100AC6A8C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B8EE91A19E2E20100AC6A8C /* Foundation.framework */; };
-		0B8EE91E19E2E20100AC6A8C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B8EE91D19E2E20100AC6A8C /* main.m */; };
-		0B8EE92D19E2E2F700AC6A8C /* smc.c in Sources */ = {isa = PBXBuildFile; fileRef = 0B8EE92B19E2E2F700AC6A8C /* smc.c */; };
-		0B8EE93119E2E30900AC6A8C /* BRLOptionParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B8EE93019E2E30900AC6A8C /* BRLOptionParser.m */; };
-		0BEBFDD319EBC7CC00CC7715 /* libbatkit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0BEBFDCE19EBC6B300CC7715 /* libbatkit.a */; };
+		0B0E42621A208AA50026BA82 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B0E42611A208AA50026BA82 /* main.m */; };
+		0B0E426B1A208AC10026BA82 /* BRLOptionParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B0E42691A208AC10026BA82 /* BRLOptionParser.m */; };
+		0B0E426F1A208DF10026BA82 /* smc.c in Sources */ = {isa = PBXBuildFile; fileRef = 0B0E426D1A208DF10026BA82 /* smc.c */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		0BEBFDCD19EBC6B300CC7715 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0BEBFDC819EBC6B300CC7715 /* BatKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 0BEBFD9D19EBC23200CC7715;
-			remoteInfo = batkit;
-		};
-		0BEBFDCF19EBC6B300CC7715 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0BEBFDC819EBC6B300CC7715 /* BatKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 0BEBFDB019EBC23200CC7715;
-			remoteInfo = batkitTests;
-		};
-		0BEBFDD119EBC7A600CC7715 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0BEBFDC819EBC6B300CC7715 /* BatKit.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 0BEBFD9C19EBC23200CC7715;
-			remoteInfo = batkit;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXCopyFilesBuildPhase section */
-		0B8EE91519E2E20100AC6A8C /* CopyFiles */ = {
+		0B0E425C1A208AA50026BA82 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = /usr/share/man/man1/;
@@ -51,197 +25,138 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0B8EE91719E2E20100AC6A8C /* xline */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = xline; sourceTree = BUILT_PRODUCTS_DIR; };
-		0B8EE91A19E2E20100AC6A8C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		0B8EE91D19E2E20100AC6A8C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		0B8EE92019E2E20100AC6A8C /* xline-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "xline-Prefix.pch"; sourceTree = "<group>"; };
-		0B8EE92B19E2E2F700AC6A8C /* smc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = smc.c; path = xline/SMCTool/smc.c; sourceTree = "<group>"; };
-		0B8EE92C19E2E2F700AC6A8C /* smc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = smc.h; path = xline/SMCTool/smc.h; sourceTree = "<group>"; };
-		0B8EE92E19E2E30900AC6A8C /* BRLOptionParser-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "BRLOptionParser-Prefix.pch"; path = "xline/BRLOptionParser/BRLOptionParser-Prefix.pch"; sourceTree = "<group>"; };
-		0B8EE92F19E2E30900AC6A8C /* BRLOptionParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BRLOptionParser.h; path = xline/BRLOptionParser/BRLOptionParser.h; sourceTree = "<group>"; };
-		0B8EE93019E2E30900AC6A8C /* BRLOptionParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BRLOptionParser.m; path = xline/BRLOptionParser/BRLOptionParser.m; sourceTree = "<group>"; };
-		0BEBFDC819EBC6B300CC7715 /* BatKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BatKit.xcodeproj; path = xline/BatKit/BatKit.xcodeproj; sourceTree = "<group>"; };
+		0B0E425E1A208AA50026BA82 /* xLine */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = xLine; sourceTree = BUILT_PRODUCTS_DIR; };
+		0B0E42611A208AA50026BA82 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		0B0E42681A208AC10026BA82 /* BRLOptionParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRLOptionParser.h; sourceTree = "<group>"; };
+		0B0E42691A208AC10026BA82 /* BRLOptionParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BRLOptionParser.m; sourceTree = "<group>"; };
+		0B0E426A1A208AC10026BA82 /* BRLOptionParser-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "BRLOptionParser-Prefix.pch"; sourceTree = "<group>"; };
+		0B0E426D1A208DF10026BA82 /* smc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = smc.c; sourceTree = "<group>"; };
+		0B0E426E1A208DF10026BA82 /* smc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = smc.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		0B8EE91419E2E20100AC6A8C /* Frameworks */ = {
+		0B0E425B1A208AA50026BA82 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0BEBFDD319EBC7CC00CC7715 /* libbatkit.a in Frameworks */,
-				0B8EE91B19E2E20100AC6A8C /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		0B8EE90E19E2E20100AC6A8C = {
+		0B0E42551A208AA50026BA82 = {
 			isa = PBXGroup;
 			children = (
-				0BEBFDC819EBC6B300CC7715 /* BatKit.xcodeproj */,
-				0B8EE93719E2E34700AC6A8C /* BRLOptionParser */,
-				0B8EE93819E2E34F00AC6A8C /* SMCUtil */,
-				0B8EE91C19E2E20100AC6A8C /* xline */,
-				0B8EE91919E2E20100AC6A8C /* Frameworks */,
-				0B8EE91819E2E20100AC6A8C /* Products */,
+				0B0E42601A208AA50026BA82 /* xLine */,
+				0B0E425F1A208AA50026BA82 /* Products */,
 			);
 			sourceTree = "<group>";
+			usesTabs = 1;
 		};
-		0B8EE91819E2E20100AC6A8C /* Products */ = {
+		0B0E425F1A208AA50026BA82 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				0B8EE91719E2E20100AC6A8C /* xline */,
+				0B0E425E1A208AA50026BA82 /* xLine */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		0B8EE91919E2E20100AC6A8C /* Frameworks */ = {
+		0B0E42601A208AA50026BA82 /* xLine */ = {
 			isa = PBXGroup;
 			children = (
-				0B8EE91A19E2E20100AC6A8C /* Foundation.framework */,
+				0B0E42701A208DF50026BA82 /* SMC */,
+				0B0E426C1A208AD00026BA82 /* BRLOptionParser */,
+				0B0E42611A208AA50026BA82 /* main.m */,
 			);
-			name = Frameworks;
+			path = xLine;
 			sourceTree = "<group>";
 		};
-		0B8EE91C19E2E20100AC6A8C /* xline */ = {
+		0B0E426C1A208AD00026BA82 /* BRLOptionParser */ = {
 			isa = PBXGroup;
 			children = (
-				0B8EE91D19E2E20100AC6A8C /* main.m */,
-				0B8EE91F19E2E20100AC6A8C /* Supporting Files */,
-			);
-			path = xline;
-			sourceTree = "<group>";
-		};
-		0B8EE91F19E2E20100AC6A8C /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				0B8EE92019E2E20100AC6A8C /* xline-Prefix.pch */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		0B8EE93719E2E34700AC6A8C /* BRLOptionParser */ = {
-			isa = PBXGroup;
-			children = (
-				0B8EE92E19E2E30900AC6A8C /* BRLOptionParser-Prefix.pch */,
-				0B8EE92F19E2E30900AC6A8C /* BRLOptionParser.h */,
-				0B8EE93019E2E30900AC6A8C /* BRLOptionParser.m */,
+				0B0E42681A208AC10026BA82 /* BRLOptionParser.h */,
+				0B0E42691A208AC10026BA82 /* BRLOptionParser.m */,
+				0B0E426A1A208AC10026BA82 /* BRLOptionParser-Prefix.pch */,
 			);
 			name = BRLOptionParser;
 			sourceTree = "<group>";
 		};
-		0B8EE93819E2E34F00AC6A8C /* SMCUtil */ = {
+		0B0E42701A208DF50026BA82 /* SMC */ = {
 			isa = PBXGroup;
 			children = (
-				0B8EE92B19E2E2F700AC6A8C /* smc.c */,
-				0B8EE92C19E2E2F700AC6A8C /* smc.h */,
+				0B0E426D1A208DF10026BA82 /* smc.c */,
+				0B0E426E1A208DF10026BA82 /* smc.h */,
 			);
-			name = SMCUtil;
-			sourceTree = "<group>";
-		};
-		0BEBFDC919EBC6B300CC7715 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				0BEBFDCE19EBC6B300CC7715 /* libbatkit.a */,
-				0BEBFDD019EBC6B300CC7715 /* batkitTests.xctest */,
-			);
-			name = Products;
+			name = SMC;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		0B8EE91619E2E20100AC6A8C /* xline */ = {
+		0B0E425D1A208AA50026BA82 /* xLine */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0B8EE92519E2E20100AC6A8C /* Build configuration list for PBXNativeTarget "xline" */;
+			buildConfigurationList = 0B0E42651A208AA50026BA82 /* Build configuration list for PBXNativeTarget "xLine" */;
 			buildPhases = (
-				0B8EE91319E2E20100AC6A8C /* Sources */,
-				0B8EE91419E2E20100AC6A8C /* Frameworks */,
-				0B8EE91519E2E20100AC6A8C /* CopyFiles */,
+				0B0E425A1A208AA50026BA82 /* Sources */,
+				0B0E425B1A208AA50026BA82 /* Frameworks */,
+				0B0E425C1A208AA50026BA82 /* CopyFiles */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				0BEBFDD219EBC7A600CC7715 /* PBXTargetDependency */,
 			);
-			name = xline;
-			productName = xline;
-			productReference = 0B8EE91719E2E20100AC6A8C /* xline */;
+			name = xLine;
+			productName = xLine;
+			productReference = 0B0E425E1A208AA50026BA82 /* xLine */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		0B8EE90F19E2E20100AC6A8C /* Project object */ = {
+		0B0E42561A208AA50026BA82 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0510;
-				ORGANIZATIONNAME = perfaram;
+				LastUpgradeCheck = 0610;
+				ORGANIZATIONNAME = Faro;
+				TargetAttributes = {
+					0B0E425D1A208AA50026BA82 = {
+						CreatedOnToolsVersion = 6.1;
+					};
+				};
 			};
-			buildConfigurationList = 0B8EE91219E2E20100AC6A8C /* Build configuration list for PBXProject "xline" */;
+			buildConfigurationList = 0B0E42591A208AA50026BA82 /* Build configuration list for PBXProject "xLine" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 			);
-			mainGroup = 0B8EE90E19E2E20100AC6A8C;
-			productRefGroup = 0B8EE91819E2E20100AC6A8C /* Products */;
+			mainGroup = 0B0E42551A208AA50026BA82;
+			productRefGroup = 0B0E425F1A208AA50026BA82 /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 0BEBFDC919EBC6B300CC7715 /* Products */;
-					ProjectRef = 0BEBFDC819EBC6B300CC7715 /* BatKit.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
-				0B8EE91619E2E20100AC6A8C /* xline */,
+				0B0E425D1A208AA50026BA82 /* xLine */,
 			);
 		};
 /* End PBXProject section */
 
-/* Begin PBXReferenceProxy section */
-		0BEBFDCE19EBC6B300CC7715 /* libbatkit.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libbatkit.a;
-			remoteRef = 0BEBFDCD19EBC6B300CC7715 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		0BEBFDD019EBC6B300CC7715 /* batkitTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = batkitTests.xctest;
-			remoteRef = 0BEBFDCF19EBC6B300CC7715 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
-
 /* Begin PBXSourcesBuildPhase section */
-		0B8EE91319E2E20100AC6A8C /* Sources */ = {
+		0B0E425A1A208AA50026BA82 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0B8EE91E19E2E20100AC6A8C /* main.m in Sources */,
-				0B8EE93119E2E30900AC6A8C /* BRLOptionParser.m in Sources */,
-				0B8EE92D19E2E2F700AC6A8C /* smc.c in Sources */,
+				0B0E426F1A208DF10026BA82 /* smc.c in Sources */,
+				0B0E426B1A208AC10026BA82 /* BRLOptionParser.m in Sources */,
+				0B0E42621A208AA50026BA82 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXTargetDependency section */
-		0BEBFDD219EBC7A600CC7715 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = batkit;
-			targetProxy = 0BEBFDD119EBC7A600CC7715 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
 /* Begin XCBuildConfiguration section */
-		0B8EE92319E2E20100AC6A8C /* Debug */ = {
+		0B0E42631A208AA50026BA82 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -256,14 +171,12 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)";
-				CONFIGURATION_TEMP_DIR = "$(BUILD_DIR)/$(CONFIGURATION)";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 0.9;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -276,14 +189,14 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				ONLY_ACTIVE_ARCH = NO;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
-				SYMROOT = "$(PROJECT_DIR)/bin/$(CONFIGURATION)";
 			};
 			name = Debug;
 		};
-		0B8EE92419E2E20100AC6A8C /* Release */ = {
+		0B0E42641A208AA50026BA82 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -298,94 +211,61 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)";
-				CONFIGURATION_TEMP_DIR = "$(BUILD_DIR)/$(CONFIGURATION)";
 				COPY_PHASE_STRIP = YES;
-				CURRENT_PROJECT_VERSION = 0.9;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
-				ONLY_ACTIVE_ARCH = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
-				SYMROOT = "$(PROJECT_DIR)/bin/$(CONFIGURATION)";
 			};
 			name = Release;
 		};
-		0B8EE92619E2E20100AC6A8C /* Debug */ = {
+		0B0E42661A208AA50026BA82 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "xline/xline-Prefix.pch";
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(TARGET_BUILD_DIR)/usr/local/lib/include\"",
-					"\"$(OBJROOT)/UninstalledProducts/include\"",
-					"batKit/include/$(TARGET_NAME)",
-					"include/$(TARGET_NAME)",
-				);
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-all_load",
-				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SYMROOT = ./bin;
 			};
 			name = Debug;
 		};
-		0B8EE92719E2E20100AC6A8C /* Release */ = {
+		0B0E42671A208AA50026BA82 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "xline/xline-Prefix.pch";
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(TARGET_BUILD_DIR)/usr/local/lib/include\"",
-					"\"$(OBJROOT)/UninstalledProducts/include\"",
-					"batKit/include/$(TARGET_NAME)",
-					"include/$(TARGET_NAME)",
-				);
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-all_load",
-				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SYMROOT = ./bin;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		0B8EE91219E2E20100AC6A8C /* Build configuration list for PBXProject "xline" */ = {
+		0B0E42591A208AA50026BA82 /* Build configuration list for PBXProject "xLine" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				0B8EE92319E2E20100AC6A8C /* Debug */,
-				0B8EE92419E2E20100AC6A8C /* Release */,
+				0B0E42631A208AA50026BA82 /* Debug */,
+				0B0E42641A208AA50026BA82 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		0B8EE92519E2E20100AC6A8C /* Build configuration list for PBXNativeTarget "xline" */ = {
+		0B0E42651A208AA50026BA82 /* Build configuration list for PBXNativeTarget "xLine" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				0B8EE92619E2E20100AC6A8C /* Debug */,
-				0B8EE92719E2E20100AC6A8C /* Release */,
+				0B0E42661A208AA50026BA82 /* Debug */,
+				0B0E42671A208AA50026BA82 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 0B8EE90F19E2E20100AC6A8C /* Project object */;
+	rootObject = 0B0E42561A208AA50026BA82 /* Project object */;
 }
