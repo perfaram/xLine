@@ -1,3 +1,6 @@
 [submodule "xline/BatKit"]
 	path = xline/BatKit
 	url = git@github.com:perfaram/BatKit.git
+[submodule "xLine/SMCWrapper"]
+	path = xLine/SMCWrapper
+	url = git@github.com:perfaram/SMCWrapper.git

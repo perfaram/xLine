@@ -22,7 +22,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 /* TODO : CREATE CLASSES */
-
+/*
 #ifndef __SMC_H__
 #define __SMC_H__
 #endif
@@ -155,7 +155,7 @@ struct LmsOverrideBehavior {
     //   controlled transition.  Set to 0
     //   (LMS_NO_RAMP) for a step change.
 };
-
+*/
 // prototypes
 kern_return_t SMCOpen(void);
 kern_return_t SMCClose(void);

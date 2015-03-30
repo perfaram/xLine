@@ -24,6 +24,7 @@
 #include <IOKit/IOKitLib.h>
 #include <IOKit/ps/IOPSKeys.h>
 #include <IOKit/ps/IOPowerSources.h>
+#import "SMCWrapper/SMCWrapper/SMCWrapper.h"
 
 #include "smc.h"
 #define KEY_INFO_CACHE_SIZE 100
@@ -476,11 +477,11 @@ SMCVal_t createSMCVal(char *valKey, char *valDataType, SMCBytes_t valBytes)
 }
 
 void SMCSILBreathe() { //SMC Key LSSB
-    enum LmsSelect breathe = kLmsBreathe;
+   /* enum LmsSelect breathe = kLmsBreathe;
     struct LmsOverrideBehavior silBehavior;
     silBehavior.lmssTargetBehavior = breathe;
     silBehavior.fRamp = true;
-    
+    */
     SMCVal_t      val;
     kern_return_t result;
     UInt32Char_t  key = "\0";
@@ -533,7 +534,7 @@ float SMCGetFanSpeed(int fanNum)
     kern_return_t result;
 
     UInt32Char_t  key;
-    sprintf(key, SMC_KEY_FAN_SPEED, fanNum);
+    sprintf(key, "F%dAc", fanNum);
     result = SMCReadKey(key, &val);
     return _strtof(val.bytes, val.dataSize, 2);
 }

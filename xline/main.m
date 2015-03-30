@@ -10,6 +10,7 @@
 
 // main.m
 #import "BRLOptionParser.h"
+#import "SMCWrapper/SMCWrapper/SMCWrapper.h"
 #import "smc.h"
 //#import "batkit/batkit/batkit.h"
 #import <sys/sysctl.h>
