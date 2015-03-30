@@ -15,13 +15,28 @@
 //#import "batkit/batkit/batkit.h"
 #import <sys/sysctl.h>
 
-void IFPrint (NSString *format, ...) {
-    va_list args;
-    va_start(args, format);
-    
-    fputs([[[NSString alloc] initWithFormat:format arguments:args] UTF8String], stdout);
-    
-    va_end(args);
+// print to stdout
+static void NSPrint(NSString *format, ...) {
+	va_list args;
+	va_start(args, format);
+	
+	NSString *string = [[NSString alloc] initWithFormat:format arguments:args];
+	
+	va_end(args);
+	
+	fprintf(stdout, "%s\n", [string UTF8String]);
+}
+
+// print to stderr
+static void NSPrintErr(NSString *format, ...) {
+	va_list args;
+	va_start(args, format);
+	
+	NSString *string = [[NSString alloc] initWithFormat:format arguments:args];
+	
+	va_end(args);
+	
+	fprintf(stderr, "%s\n", [string UTF8String]);
 }
 
 NSString* machineModel() {
@@ -77,9 +92,10 @@ int main(int argc, const char * argv[])
         BOOL convert = NO;
         BOOL type = NO;
         BOOL fandata = NO;
-        BOOL verbose = NO;
+        //BOOL verbose = NO;
         
         BRLOptionParser *options = [BRLOptionParser new];
+		SMCWrapper *smcWrapper = [SMCWrapper sharedWrapper];
         [options addSeparator:@"==Options=="];
         [options addOption:"temp" flag:'t' description:@"Prints the specified component's temperature. Use [-t help] to know which info you can request." argument:&probe];
         [options addOption:"battery" flag:'b' description:@"Prints the specified battery info. Use [-b help] to know which info you can request." argument:&batterySelector];
@@ -94,7 +110,7 @@ int main(int argc, const char * argv[])
         [options addOption:"type" flag:'T' description:@"Combine with -s. Shows only the requested key's type (eg SP78)" value:&type];
         [options addOption:"convert" flag:'C' description:@"Combine with -s. Shows converted data (bytes 41e0 [SP78] => ~65.625 [°C]) without any text" value:&convert];
         [options addOption:"fandata" flag:'D' description:@"Combine with -f. Shows fan parameters in a comma-separated list style. Use [-f help] to get examples." value:&fandata];
-        [options addOption:"verbose" flag:'v' description:nil value:&verbose];
+        //[options addOption:"verbose" flag:'v' description:nil value:&verbose];
         __weak typeof(options) weakOptions = options;
         [options addOption:"help" flag:'h' description:@"Show this message" block:^{
             printf("%s", [[weakOptions description] UTF8String]);
@@ -108,63 +124,66 @@ int main(int argc, const char * argv[])
             exit(EXIT_FAILURE);
         }
         
-        if (![probe isEqualToString:@""]) {
-            char *probeKey;
-            if ([probe caseInsensitiveCompare:@"CPU"]== NSOrderedSame )
-                probeKey = "TC0P";
-            else if ([probe caseInsensitiveCompare:@"CPUD"]== NSOrderedSame )
-                probeKey = "TC0D";
-            else if ([probe caseInsensitiveCompare:@"CPUH"]== NSOrderedSame )
-                probeKey = "TC0H";
-            else if ([probe caseInsensitiveCompare:@"GPU"]== NSOrderedSame )
-                probeKey = "TG0P";
-            else if ([probe caseInsensitiveCompare:@"GPUD"]== NSOrderedSame )
-                probeKey = "TG0D";
-            else if ([probe caseInsensitiveCompare:@"GPUH"]== NSOrderedSame )
-                probeKey = "TG0H";
-            else if ([probe caseInsensitiveCompare:@"PALM"]== NSOrderedSame )
-                probeKey = "Ts0P";
-            else if ([probe caseInsensitiveCompare:@"POWER"]== NSOrderedSame )//battery charger prox (FUCK HERE, Tm0P/Tp0P/Tp0C)
-                probeKey = "Ts0S";
-            else if ([probe caseInsensitiveCompare:@"BAT3"]== NSOrderedSame ) // battery pos 3
-                probeKey = "TB2T";
-            else if ([probe caseInsensitiveCompare:@"BAT2"]== NSOrderedSame ) // battery pos 2
-                probeKey = "TB1T";
-            else if ([probe caseInsensitiveCompare:@"BAT1"]== NSOrderedSame ) // battery pos 1
-                probeKey = "TB0T";
-            else if ([probe caseInsensitiveCompare:@"WHATSTHAT"]== NSOrderedSame ) //BPIT, TC0F, BRIT, TPCD
-                probeKey = "WHAT";
-            else if ([probe caseInsensitiveCompare:@"PCHD"]== NSOrderedSame )
-                probeKey = "TPCD";
-            else if ([probe caseInsensitiveCompare:@"PCH"]== NSOrderedSame )
-                probeKey = "TP0P";
-            else if ([probe caseInsensitiveCompare:@"MEM1"]== NSOrderedSame )
-                probeKey = "TM0S";
-            else if ([probe caseInsensitiveCompare:@"MEM2"]== NSOrderedSame ) // ACTUALLY MEM PROX
-                probeKey = "TM0P";
-            else if ([probe caseInsensitiveCompare:@"LCD"]== NSOrderedSame )
-                probeKey = "TL0P";
-            else if ([probe caseInsensitiveCompare:@"AIR"]== NSOrderedSame )
-                probeKey = "TW0P";
-            else if ([probe caseInsensitiveCompare:@"help"]== NSOrderedSame ) {
-                printf("Here's what you can request with -t : \n- CPU \n- CPUH : CPU Heatsink\n- CPUD : CPU Die\n- GPU\n- GPUH : GPU Heatsink\n- GPUD : GPU Die\n- PALM : Left palm rest\n- POWER : Battery charger proximity\n- BAT3 : Battery, position 3\n- BAT2 : Battery, position 2\n- BAT1 : Battery, position 1\n- PCHD : Platform Controller Hub\n- PCH : Power Supply Proximity\n- MEM1 : RAM\n- MEM2 : RAM proximity\n- LCD : Screen\n- AIR : Airport\nIf something returns 0, don't worry, as it just means that there is no such part within your computer !\n");
-                exit(EXIT_FAILURE);
-            } else {
-                printf("E02 Unknown component\n");
-                exit(EXIT_FAILURE);
-            }
-            double temp;
-            kern_return_t result;
-            result= SMCGetTemperature(probeKey, &temp);
-            //IFPrint(@"%f", temp);
-            printf("%f °C\n", temp);//[probe UTF8String]);
-            exit(EXIT_SUCCESS);
-        };
-        
+		if (![probe isEqualToString:@""]) {
+			NSString* probeKey;
+			if ([probe caseInsensitiveCompare:@"CPU"]== NSOrderedSame )
+				probeKey = @"TC0P";
+			else if ([probe caseInsensitiveCompare:@"CPUD"]== NSOrderedSame )
+				probeKey = @"TC0D";
+			else if ([probe caseInsensitiveCompare:@"CPUH"]== NSOrderedSame )
+				probeKey = @"TC0H";
+			else if ([probe caseInsensitiveCompare:@"GPU"]== NSOrderedSame )
+				probeKey = @"TG0P";
+			else if ([probe caseInsensitiveCompare:@"GPUD"]== NSOrderedSame )
+				probeKey = @"TG0D";
+			else if ([probe caseInsensitiveCompare:@"GPUH"]== NSOrderedSame )
+				probeKey = @"TG0H";
+			else if ([probe caseInsensitiveCompare:@"PALM"]== NSOrderedSame )
+				probeKey = @"Ts0P";
+			else if ([probe caseInsensitiveCompare:@"POWER"]== NSOrderedSame )//battery charger prox (FUCK HERE, Tm0P/Tp0P/Tp0C)
+				probeKey = @"Ts0S";
+			else if ([probe caseInsensitiveCompare:@"BAT3"]== NSOrderedSame ) // battery pos 3
+				probeKey = @"TB2T";
+			else if ([probe caseInsensitiveCompare:@"BAT2"]== NSOrderedSame ) // battery pos 2
+				probeKey = @"TB1T";
+			else if ([probe caseInsensitiveCompare:@"BAT1"]== NSOrderedSame ) // battery pos 1
+				probeKey = @"TB0T";
+			else if ([probe caseInsensitiveCompare:@"WHATSTHAT"]== NSOrderedSame ) //BPIT, TC0F, BRIT, TPCD
+				probeKey = @"WHAT";
+			else if ([probe caseInsensitiveCompare:@"PCHD"]== NSOrderedSame )
+				probeKey = @"TPCD";
+			else if ([probe caseInsensitiveCompare:@"PCH"]== NSOrderedSame )
+				probeKey = @"TP0P";
+			else if ([probe caseInsensitiveCompare:@"MEM1"]== NSOrderedSame )
+				probeKey = @"TM0S";
+			else if ([probe caseInsensitiveCompare:@"MEM2"]== NSOrderedSame ) // ACTUALLY MEM PROX
+				probeKey = @"TM0P";
+			else if ([probe caseInsensitiveCompare:@"LCD"]== NSOrderedSame )
+				probeKey = @"TL0P";
+			else if ([probe caseInsensitiveCompare:@"AIR"]== NSOrderedSame )
+				probeKey = @"TW0P";
+			else if ([probe caseInsensitiveCompare:@"help"]== NSOrderedSame ) {
+				printf("Here's what you can request with -t : \n- CPU \n- CPUH : CPU Heatsink\n- CPUD : CPU Die\n- GPU\n- GPUH : GPU Heatsink\n- GPUD : GPU Die\n- PALM : Left palm rest\n- POWER : Battery charger proximity\n- BAT3 : Battery, position 3\n- BAT2 : Battery, position 2\n- BAT1 : Battery, position 1\n- PCHD : Platform Controller Hub\n- PCH : Power Supply Proximity\n- MEM1 : RAM\n- MEM2 : RAM proximity\n- LCD : Screen\n- AIR : Airport\nIf something returns 0, don't worry, as it just means that there is no such part within your computer !\n");
+				exit(EXIT_FAILURE);
+			} else {
+				printf("E02 Unknown component\n");
+				exit(EXIT_FAILURE);
+			}
+			bool result;
+			NSString *REQTemp;
+			result = [smcWrapper readKey:probeKey intoString:&REQTemp];
+			if (result!=YES) {
+				printf("An error occured while reading from SMC !");
+				exit(EXIT_FAILURE);
+			}
+			NSPrint(@"%@ °C", REQTemp);
+			exit(EXIT_SUCCESS);
+		};
+		
         if (![platform isEqualToString:@""]) {
             //char *plKey;
             if ([platform caseInsensitiveCompare:@"deviceID"]== NSOrderedSame ) {
-                IFPrint(machineModel());
+                NSPrint(machineModel());
                 printf("\n");
                 exit(EXIT_SUCCESS);
             } else if ([platform caseInsensitiveCompare:@"platform"]== NSOrderedSame ) {
@@ -183,7 +202,7 @@ int main(int argc, const char * argv[])
                     exit(EXIT_SUCCESS);
                 }
             } else if ([platform caseInsensitiveCompare:@"smcver"]== NSOrderedSame) {
-                IFPrint(getSMCVer());
+                NSPrint(getSMCVer());
                 exit(EXIT_SUCCESS);
             } else if ([probe caseInsensitiveCompare:@"help"]== NSOrderedSame ) {
                 printf("You can request : \n- device : Device ID (eg MacBookPro8,1)\n- platform : Platform string (eg k90i)\n- SMCver : SMC version.");

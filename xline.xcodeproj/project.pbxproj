@@ -9,9 +9,9 @@
 /* Begin PBXBuildFile section */
 		0B0E42621A208AA50026BA82 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B0E42611A208AA50026BA82 /* main.m */; };
 		0B0E426B1A208AC10026BA82 /* BRLOptionParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B0E42691A208AC10026BA82 /* BRLOptionParser.m */; };
-		0B0E426F1A208DF10026BA82 /* smc.m in Sources */ = {isa = PBXBuildFile; fileRef = 0B0E426D1A208DF10026BA82 /* smc.m */; };
 		0BAA41AD1AC9904B008E6DA6 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 0BAA41A91AC9904B008E6DA6 /* README.md */; };
 		0BAA41AE1AC9904B008E6DA6 /* SMCWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 0BAA41AC1AC9904B008E6DA6 /* SMCWrapper.m */; };
+		0BAA41B11AC99D50008E6DA6 /* smc.m in Sources */ = {isa = PBXBuildFile; fileRef = 0BAA41B01AC99D50008E6DA6 /* smc.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -32,12 +32,12 @@
 		0B0E42681A208AC10026BA82 /* BRLOptionParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRLOptionParser.h; sourceTree = "<group>"; };
 		0B0E42691A208AC10026BA82 /* BRLOptionParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BRLOptionParser.m; sourceTree = "<group>"; };
 		0B0E426A1A208AC10026BA82 /* BRLOptionParser-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "BRLOptionParser-Prefix.pch"; sourceTree = "<group>"; };
-		0B0E426D1A208DF10026BA82 /* smc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = smc.m; sourceTree = "<group>"; };
-		0B0E426E1A208DF10026BA82 /* smc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = smc.h; sourceTree = "<group>"; };
 		0BAA41A81AC9904B008E6DA6 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		0BAA41A91AC9904B008E6DA6 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		0BAA41AB1AC9904B008E6DA6 /* SMCWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMCWrapper.h; sourceTree = "<group>"; };
 		0BAA41AC1AC9904B008E6DA6 /* SMCWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMCWrapper.m; sourceTree = "<group>"; };
+		0BAA41AF1AC99D50008E6DA6 /* smc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = smc.h; sourceTree = "<group>"; };
+		0BAA41B01AC99D50008E6DA6 /* smc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = smc.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,8 +92,8 @@
 		0B0E42701A208DF50026BA82 /* SMC */ = {
 			isa = PBXGroup;
 			children = (
-				0B0E426D1A208DF10026BA82 /* smc.m */,
-				0B0E426E1A208DF10026BA82 /* smc.h */,
+				0BAA41AF1AC99D50008E6DA6 /* smc.h */,
+				0BAA41B01AC99D50008E6DA6 /* smc.m */,
 			);
 			name = SMC;
 			sourceTree = "<group>";
@@ -173,9 +173,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0B0E426F1A208DF10026BA82 /* smc.m in Sources */,
 				0BAA41AE1AC9904B008E6DA6 /* SMCWrapper.m in Sources */,
 				0B0E426B1A208AC10026BA82 /* BRLOptionParser.m in Sources */,
+				0BAA41B11AC99D50008E6DA6 /* smc.m in Sources */,
 				0BAA41AD1AC9904B008E6DA6 /* README.md in Sources */,
 				0B0E42621A208AA50026BA82 /* main.m in Sources */,
 			);
