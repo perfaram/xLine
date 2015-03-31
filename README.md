@@ -7,7 +7,7 @@ Easy-to-use command-line utility to get system informations, such as component t
 You can also make raw requests to your Macintosh's SMC, using `-s TC0P`, where TC0P (currently, the CPU temperature) can be replaced by whatever you want (see https://github.com/perfaram/xLine/blob/master/SMC_Keys.md)
 
 ##Todo : 
-* Use SMCWrapper ([@fmorrow](http://github.com/fmorrow))
+* **[SEE SMCWRAPPER BRANCH]** : Use SMCWrapper ([@fmorrow](http://github.com/fmorrow))
 * Clean
 
 ##Copyrights :
