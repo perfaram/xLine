@@ -4,7 +4,7 @@
 //
 //  Created by Perceval FARAMAZ on 03.10.14.
 //  Copyright (c) 2014 Perceval <perfaram> Faramaz. All rights reserved.
-//
+//TODO : remove repeating if (raw) elseif (bruh) code
 
 #import <Foundation/Foundation.h>
 
@@ -89,7 +89,7 @@ int main(int argc, const char * argv[])
         NSString *platform= @"";
         NSString *dump= @"";
         BOOL raw = NO;
-        BOOL convert = NO;
+        BOOL silent = NO;
         BOOL type = NO;
         BOOL fandata = NO;
         //BOOL verbose = NO;
@@ -99,16 +99,16 @@ int main(int argc, const char * argv[])
         [options addSeparator:@"==Options=="];
         [options addOption:"temp" flag:'t' description:@"Prints the specified component's temperature. Use [-t help] to know which info you can request." argument:&probe];
         [options addOption:"battery" flag:'b' description:@"Prints the specified battery info. Use [-b help] to know which info you can request." argument:&batterySelector];
-        [options addOption:"smcRead" flag:'r' description:@"Useful to make raw SMC requests. For example : xline -s X (X = SMC key) will return raw SMC data (in hex) and its type. See SWITCHES section to get all this formatted." argument:&smc];
+        [options addOption:"smcRead" flag:'s' description:@"Useful to make raw SMC requests. For example : xline -s X (X = SMC key) will return raw SMC data (in hex) and its type. See SWITCHES section to get all this formatted." argument:&smc];
         //[options addOption:"smcWrite" flag:'w' description:@"Used to write data to SMC. Be careful, it could disturb it (you'll have to reinitialise it) - or even worse... For example : xline -S X Y (X = SMC key, Y = Value) " argument:&smcW];
         [options addOption:"platform" flag:'p' description:@"Getting computer info, such as device (eg MacBookPro8,1). To get more info, [-p help]." argument:&platform];
-        [options addOption:"SIL" flag:'S' description:@"Setting SIL (the led that sits on your MacBook's front) state. [-S 1] is on, [-S 0] is off, [-S breathe] makes it breathe like when the MacBook is sleeping." argument:&sil];
+        [options addOption:"SIL" flag:'l' description:@"Setting SIL (the led that sits on your MacBook's front) state. [-S 1] is on, [-S 0] is off, [-S breathe] makes it breathe like when the MacBook is sleeping." argument:&sil];
         [options addOption:"fan" flag:'f' description:@"Prints the specified fan's data. Use [-f help] to get examples." argument:&fan];
         //[options addOption:"dump" flag:'d' description:@"Dumps everything to a ZIP archive, containing different files. See [-d help] to know more." argument:&dump];
         [options addSeparator:@"Switches"];
         [options addOption:"raw" flag:'R' description:@"Combine with -s. Shows raw data (hex)" value:&raw];
         [options addOption:"type" flag:'T' description:@"Combine with -s. Shows only the requested key's type (eg SP78)" value:&type];
-        [options addOption:"convert" flag:'C' description:@"Combine with -s. Shows converted data (bytes 41e0 [SP78] => ~65.625 [°C]) without any text" value:&convert];
+        [options addOption:"silent" flag:'S' description:@"Combine with -s. Shows converted data (e.g. 65.625) without any text" value:&silent];
         [options addOption:"fandata" flag:'D' description:@"Combine with -f. Shows fan parameters in a comma-separated list style. Use [-f help] to get examples." value:&fandata];
         //[options addOption:"verbose" flag:'v' description:nil value:&verbose];
         __weak typeof(options) weakOptions = options;
@@ -326,31 +326,31 @@ int main(int argc, const char * argv[])
 		}
 		
         if (![smc isEqualToString:@""]) {
-            char *smcKey = (char*)[smc UTF8String];
-            SMCOpen();
+            /*char *smcKey = (char*)[smc UTF8String];
             kern_return_t result;
             SMCVal_t val;
-            result = SMCReadKey(smcKey, &val);
-            if (result != kIOReturnSuccess) {
-                printf("E10 SMC transaction failed with error %08x\n", result);
-                exit(EXIT_FAILURE);
-            } else {
-                if (raw) {
-                    printRawVal(val);
-                    printf("\n");
-                }
-                else if (convert) {
-                    printConvVal(val);
-                }
-                else if (type) {
-                    printValType(val);
-                }
-                else {
-                    printVal(val);
-                };
-            };
-            SMCClose();
-            exit(EXIT_SUCCESS);
+            result = SMCReadKey(smcKey, &val);*/
+			bool result;
+			NSString *prnString;
+			SMCVal_t REQVal = [smcWrapper createEmptyValue];
+			result = [smcWrapper readKey:smc intoVal:&REQVal];
+			if (result!=YES) {
+				printf("An error occured while reading from SMC !");
+				exit(EXIT_FAILURE);
+			} else {
+				if (raw) {
+					//printRawVal(val);
+					[smcWrapper stringRawRepresentationOfVal:REQVal intoString:&prnString];
+				}
+				else if (type) {
+					[smcWrapper typeOfVal:REQVal intoString:&prnString];
+				}
+				else {
+					[smcWrapper stringRepresentationOfVal:REQVal intoString:&prnString];
+				};
+				NSPrint(@"%@", prnString);
+				exit(EXIT_SUCCESS);
+			};
         }
         
         
