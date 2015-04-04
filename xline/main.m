@@ -176,42 +176,13 @@ int main(int argc, const char * argv[])
 				printf("An error occured while reading from SMC !");
 				exit(EXIT_FAILURE);
 			}
-			NSPrint(@"%@ °C", REQTemp);
+			if (silent) {
+				NSPrint(@"%@", REQTemp);
+			} else {
+				NSPrint(@"%@ °C", REQTemp);
+			}
 			exit(EXIT_SUCCESS);
 		};
-		
-        if (![platform isEqualToString:@""]) {
-            //char *plKey;
-            if ([platform caseInsensitiveCompare:@"deviceID"]== NSOrderedSame ) {
-                NSPrint(machineModel());
-                printf("\n");
-                exit(EXIT_SUCCESS);
-            } else if ([platform caseInsensitiveCompare:@"platform"]== NSOrderedSame ) {
-                kern_return_t result;
-                SMCVal_t val;
-                SMCOpen();
-                result= SMCReadKey("RPlt", &val);
-                if (result != kIOReturnSuccess) {
-                    printf("E10 SMC transaction failed with error %08x\n", result);
-                    SMCClose();
-                    exit(EXIT_FAILURE);
-                } else {
-                    printConvVal(val);
-                    printf("\n");
-                    SMCClose();
-                    exit(EXIT_SUCCESS);
-                }
-            } else if ([platform caseInsensitiveCompare:@"smcver"]== NSOrderedSame) {
-                NSPrint(getSMCVer());
-                exit(EXIT_SUCCESS);
-            } else if ([probe caseInsensitiveCompare:@"help"]== NSOrderedSame ) {
-                printf("You can request : \n- device : Device ID (eg MacBookPro8,1)\n- platform : Platform string (eg k90i)\n- SMCver : SMC version.");
-                exit(EXIT_FAILURE);
-            } else {
-                printf("E02 Unknown key\n");
-                exit(EXIT_FAILURE);
-            }
-        }
         
         if (![fan isEqualToString:@""]) {
             if ([fan caseInsensitiveCompare:@"help"]== NSOrderedSame) {
