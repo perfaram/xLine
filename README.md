@@ -6,11 +6,11 @@ If you feel in a helpful mood, then fork, do your stuff, and submit a pull reque
 Easy-to-use command-line utility to get system informations, such as component temperature or battery data (will come back soon).
 You can also make raw requests to your Macintosh's SMC, using `-s TC0P`, where TC0P (currently, the CPU temperature) can be replaced by whatever you want (see https://github.com/perfaram/xLine/blob/master/SMC_Keys.md)
 
-##Todo : 
+## Todo : 
 * Use SMCWrapper ([@fmorrow](http://github.com/fmorrow))
 * Clean
 
-##Copyrights :
+## Copyrights :
 #### SMCUtil
  * Original version Copyright (C) 2006 devnull
  * Portions Copyright (C) 2012 Alex Leigh (@alexleigh)
